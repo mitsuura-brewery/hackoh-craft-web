@@ -7,14 +7,23 @@ export interface MaterialParameters {
   moisture?: number;
 }
 
+export interface MaterialColors {
+  primary: string;
+  light: string;
+  background: string;
+  border: string;
+}
+
 export interface Material {
   id: string;
   name: string;
+  shortName: string;
   category: MaterialCategory;
   icon: string;
   thumbnail: string;
   description: string;
   parameters: MaterialParameters;
+  colors: MaterialColors;
 }
 
 export interface NutritionFacts {
@@ -51,6 +60,7 @@ export const INITIAL_MATERIALS: Material[] = [
   {
     id: 'salted-soybean-paste',
     name: '塩切り大豆ペースト',
+    shortName: '大豆',
     category: 'protein',
     icon: '🫘',
     thumbnail: '/materials/soybean-paste.jpg',
@@ -59,11 +69,18 @@ export const INITIAL_MATERIALS: Material[] = [
       protein: 15.2,
       salt: 12.5,
       moisture: 55.0
+    },
+    colors: {
+      primary: '#8B4513',     // サドルブラウン（元の茶色）
+      light: '#DEB887',       // バーリウッド
+      background: '#8B4513',  // 背景用
+      border: '#8B4513'       // ボーダー用
     }
   },
   {
     id: 'salted-chickpea-paste',
     name: '塩切りひよこ豆ペースト',
+    shortName: 'ひよこ豆',
     category: 'protein',
     icon: '🌰',
     thumbnail: '/materials/chickpea-paste.jpg',
@@ -72,11 +89,18 @@ export const INITIAL_MATERIALS: Material[] = [
       protein: 12.8,
       salt: 11.0,
       moisture: 58.0
+    },
+    colors: {
+      primary: '#D2691E',     // チョコレート（オレンジ寄りの茶色）
+      light: '#F4A460',       // サンディブラウン
+      background: '#D2691E',  // 背景用
+      border: '#D2691E'       // ボーダー用
     }
   },
   {
     id: 'rice-koji',
     name: '米麹',
+    shortName: '米麹',
     category: 'koji',
     icon: '🌾',
     thumbnail: '/materials/rice-koji.jpg',
@@ -84,11 +108,18 @@ export const INITIAL_MATERIALS: Material[] = [
     parameters: {
       enzyme: 8.5,
       moisture: 28.0
+    },
+    colors: {
+      primary: '#9ACD32',     // イエローグリーン（元の緑色）
+      light: '#ADFF2F',       // グリーンイエロー
+      background: '#9ACD32',  // 背景用
+      border: '#9ACD32'       // ボーダー用
     }
   },
   {
     id: 'barley-koji',
     name: '麦麹',
+    shortName: '麦麹',
     category: 'koji',
     icon: '🌾',
     thumbnail: '/materials/barley-koji.jpg',
@@ -96,6 +127,12 @@ export const INITIAL_MATERIALS: Material[] = [
     parameters: {
       enzyme: 7.2,
       moisture: 32.0
+    },
+    colors: {
+      primary: '#6B8E23',     // オリーブドラブ（深い緑色）
+      light: '#8FBC8F',       // ダークシーグリーン
+      background: '#6B8E23',  // 背景用
+      border: '#6B8E23'       // ボーダー用
     }
   }
 ];

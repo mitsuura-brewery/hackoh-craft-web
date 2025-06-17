@@ -32,6 +32,11 @@ This is a Next.js 15 application using the App Router with TypeScript and Tailwi
 - Automatic dark mode support via `prefers-color-scheme`
 - Geist Sans and Geist Mono fonts loaded from Google Fonts
 
+### Styling Rule
+- Avoid writing CSS `style` directly unless necessary.
+- Define styles in `className` using `TailwindCSS`.
+- Switch dynamic classes using the `cn` function.
+
 ### TypeScript Configuration
 - Path aliases configured with `@/*` pointing to `./src/*`
 - Strict mode enabled

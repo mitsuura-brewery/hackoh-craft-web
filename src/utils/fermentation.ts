@@ -53,9 +53,9 @@ export const calculateFermentation = (materials: Material[]): FermentationCalcul
   const nutritionFacts: NutritionFacts = {
     protein: materials.reduce((sum, m) => sum + (m.parameters.protein || 0), 0),
     carbohydrate: materials.reduce((sum, m) => sum + (m.parameters.enzyme || 0) * 4, 0),
-    fat: materials.reduce((sum, m) => sum + 0.8, 0), // 発酵により生成される脂質
+    fat: materials.length * 0.8, // 発酵により生成される脂質
     sodium: materials.reduce((sum, m) => sum + (m.parameters.salt || 0) * 400, 0), // mg単位
-    fiber: materials.reduce((sum, m) => sum + 2.1, 0), // 材料由来の食物繊維
+    fiber: materials.length * 2.1, // 材料由来の食物繊維
     calories: materials.reduce((sum, m) => 
       sum + (m.parameters.protein || 0) * 4 + (m.parameters.enzyme || 0) * 4 + 0.8 * 9, 0
     )

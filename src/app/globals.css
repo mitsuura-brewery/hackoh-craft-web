@@ -71,12 +71,14 @@
   }
 }
 
+/* ダークモードを無効化してライトモードに固定
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #2D1B12;
     --foreground: #F5E6D3;
   }
 }
+*/
 
 body {
   background: var(--background);
