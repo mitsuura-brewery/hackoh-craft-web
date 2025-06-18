@@ -49,18 +49,6 @@ export default function PurchaseButton({
 
     // 新しいタブで開く
     window.open(shopifyUrl, '_blank', 'noopener,noreferrer');
-
-    // アナリティクス（必要に応じて）
-    if (
-      typeof window !== 'undefined' &&
-      (window as Window & { gtag?: (...args: unknown[]) => void }).gtag
-    ) {
-      (window as Window & { gtag: (...args: unknown[]) => void }).gtag('event', 'purchase_intent', {
-        event_category: 'ecommerce',
-        event_label: selectedMaterials.map((m) => m.name).join(', '),
-        value: selectedMaterials.length,
-      });
-    }
   };
 
   const materialNames = Object.entries(
