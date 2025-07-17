@@ -24,6 +24,7 @@ export interface Material {
   description: string;
   parameters: MaterialParameters;
   colors: MaterialColors;
+  shopifyVariantId: string;
 }
 
 export interface NutritionFacts {
@@ -68,14 +69,15 @@ export const INITIAL_MATERIALS: Material[] = [
     parameters: {
       protein: 15.2,
       salt: 12.5,
-      moisture: 55.0
+      moisture: 55.0,
     },
     colors: {
-      primary: '#8B4513',     // サドルブラウン（元の茶色）
-      light: '#DEB887',       // バーリウッド
-      background: '#8B4513',  // 背景用
-      border: '#8B4513'       // ボーダー用
-    }
+      primary: '#8B4513', // サドルブラウン（元の茶色）
+      light: '#DEB887', // バーリウッド
+      background: '#8B4513', // 背景用
+      border: '#8B4513', // ボーダー用
+    },
+    shopifyVariantId: '45123752296604',
   },
   {
     id: 'salted-chickpea-paste',
@@ -88,14 +90,15 @@ export const INITIAL_MATERIALS: Material[] = [
     parameters: {
       protein: 12.8,
       salt: 11.0,
-      moisture: 58.0
+      moisture: 58.0,
     },
     colors: {
-      primary: '#D2691E',     // チョコレート（オレンジ寄りの茶色）
-      light: '#F4A460',       // サンディブラウン
-      background: '#D2691E',  // 背景用
-      border: '#D2691E'       // ボーダー用
-    }
+      primary: '#D2691E', // チョコレート（オレンジ寄りの茶色）
+      light: '#F4A460', // サンディブラウン
+      background: '#D2691E', // 背景用
+      border: '#D2691E', // ボーダー用
+    },
+    shopifyVariantId: '45123753115804',
   },
   {
     id: 'rice-koji',
@@ -107,14 +110,15 @@ export const INITIAL_MATERIALS: Material[] = [
     description: '米を麹菌で発酵させた発酵触媒',
     parameters: {
       enzyme: 8.5,
-      moisture: 28.0
+      moisture: 28.0,
     },
     colors: {
-      primary: '#9ACD32',     // イエローグリーン（元の緑色）
-      light: '#ADFF2F',       // グリーンイエロー
-      background: '#9ACD32',  // 背景用
-      border: '#9ACD32'       // ボーダー用
-    }
+      primary: '#9ACD32', // イエローグリーン（元の緑色）
+      light: '#ADFF2F', // グリーンイエロー
+      background: '#9ACD32', // 背景用
+      border: '#9ACD32', // ボーダー用
+    },
+    shopifyVariantId: '45123754885276',
   },
   {
     id: 'barley-koji',
@@ -126,22 +130,23 @@ export const INITIAL_MATERIALS: Material[] = [
     description: '麦を麹菌で発酵させた発酵触媒',
     parameters: {
       enzyme: 7.2,
-      moisture: 32.0
+      moisture: 32.0,
     },
     colors: {
-      primary: '#6B8E23',     // オリーブドラブ（深い緑色）
-      light: '#8FBC8F',       // ダークシーグリーン
-      background: '#6B8E23',  // 背景用
-      border: '#6B8E23'       // ボーダー用
-    }
-  }
+      primary: '#6B8E23', // オリーブドラブ（深い緑色）
+      light: '#8FBC8F', // ダークシーグリーン
+      background: '#6B8E23', // 背景用
+      border: '#6B8E23', // ボーダー用
+    },
+    shopifyVariantId: '45123755770012',
+  },
 ];
 
 export const SEASONAL_TEMPERATURES: SeasonalTemperature = {
   spring: 18,
   summer: 28,
   autumn: 22,
-  winter: 12
+  winter: 12,
 };
 
 export const getCurrentSeason = (): keyof SeasonalTemperature => {

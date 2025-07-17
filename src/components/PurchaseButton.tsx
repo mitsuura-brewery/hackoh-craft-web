@@ -16,7 +16,7 @@ interface PurchaseButtonProps {
 export default function PurchaseButton({
   selectedMaterials,
   disabled = false,
-  shopifyBaseUrl = 'https://your-miso-shop.myshopify.com',
+  shopifyBaseUrl = 'https://hackoh.jp',
 }: PurchaseButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -36,7 +36,6 @@ export default function PurchaseButton({
       : '0 8px 20px rgba(139, 69, 19, 0.3)',
     config: { tension: 300, friction: 10 },
   });
-
 
   const handleClick = () => {
     if (disabled || selectedMaterials.length === 0) return;

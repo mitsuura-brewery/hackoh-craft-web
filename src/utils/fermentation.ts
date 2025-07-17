@@ -83,14 +83,18 @@ export const calculateFermentation = (materials: Material[]): FermentationCalcul
 };
 
 export const generateShopifyUrl = (materials: Material[], baseUrl: string = 'https://your-shop.myshopify.com'): string => {
-  const materialIds = materials.map(m => m.id).join(',');
-  const params = new URLSearchParams({
-    materials: materialIds,
-    utm_source: 'fermentation_lab',
-    utm_medium: 'custom_blend'
-  });
+  // 材料ごとの数をカウント
+  const materialCounts = materials.reduce((acc, material) => {
+    acc[material.shopifyVariantId] = (acc[material.shopifyVariantId] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  // variantId:count の形式で組み立て
+  const cartItems = Object.entries(materialCounts)
+    .map(([variantId, count]) => `${variantId}:${count}`)
+    .join(',');
   
-  return `${baseUrl}/cart/add?${params.toString()}`;
+  return `${baseUrl}/cart/${cartItems}?storefront=true`;
 };
 
 export const createCompound = (materials: Material[]): Compound => {
