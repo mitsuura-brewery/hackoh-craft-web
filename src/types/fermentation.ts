@@ -63,7 +63,7 @@ export const INITIAL_MATERIALS: Material[] = [
     name: '塩切り大豆ペースト',
     shortName: '大豆',
     category: 'protein',
-    icon: '🫘',
+    icon: '/img/soy.png',
     thumbnail: '/materials/soybean-paste.jpg',
     description: '大豆を塩で調味したペースト状の発酵素材',
     parameters: {
@@ -72,10 +72,10 @@ export const INITIAL_MATERIALS: Material[] = [
       moisture: 55.0,
     },
     colors: {
-      primary: '#8B4513', // サドルブラウン（元の茶色）
-      light: '#DEB887', // バーリウッド
-      background: '#8B4513', // 背景用
-      border: '#8B4513', // ボーダー用
+      primary: '#f8cc99', // 大豆ベース色
+      light: '#fce8d1', // 淡い大豆色
+      background: '#f8cc99', // 背景用
+      border: '#e6b17a', // 濃い大豆色
     },
     shopifyVariantId: '45123752296604',
   },
@@ -84,7 +84,7 @@ export const INITIAL_MATERIALS: Material[] = [
     name: '塩切りひよこ豆ペースト',
     shortName: 'ひよこ豆',
     category: 'protein',
-    icon: '🌰',
+    icon: '/img/chickpeas.png',
     thumbnail: '/materials/chickpea-paste.jpg',
     description: 'ひよこ豆を塩で調味したペースト状の発酵素材',
     parameters: {
@@ -93,10 +93,10 @@ export const INITIAL_MATERIALS: Material[] = [
       moisture: 58.0,
     },
     colors: {
-      primary: '#D2691E', // チョコレート（オレンジ寄りの茶色）
-      light: '#F4A460', // サンディブラウン
-      background: '#D2691E', // 背景用
-      border: '#D2691E', // ボーダー用
+      primary: '#f4e654', // ひよこ豆ベース色
+      light: '#f9f19e', // 淡いひよこ豆色
+      background: '#f4e654', // 背景用
+      border: '#e0cf2a', // 濃いひよこ豆色
     },
     shopifyVariantId: '45123753115804',
   },
@@ -105,7 +105,7 @@ export const INITIAL_MATERIALS: Material[] = [
     name: '米麹',
     shortName: '米麹',
     category: 'koji',
-    icon: '🌾',
+    icon: '/img/rice.png',
     thumbnail: '/materials/rice-koji.jpg',
     description: '米を麹菌で発酵させた発酵触媒',
     parameters: {
@@ -113,10 +113,10 @@ export const INITIAL_MATERIALS: Material[] = [
       moisture: 28.0,
     },
     colors: {
-      primary: '#9ACD32', // イエローグリーン（元の緑色）
-      light: '#ADFF2F', // グリーンイエロー
-      background: '#9ACD32', // 背景用
-      border: '#9ACD32', // ボーダー用
+      primary: '#d0e4e8', // 米麹ベース色
+      light: '#e8f4f6', // 淡い米麹色
+      background: '#d0e4e8', // 背景用
+      border: '#b8d1d6', // 濃い米麹色
     },
     shopifyVariantId: '45123754885276',
   },
@@ -125,7 +125,7 @@ export const INITIAL_MATERIALS: Material[] = [
     name: '麦麹',
     shortName: '麦麹',
     category: 'koji',
-    icon: '🌾',
+    icon: '/img/wheat.png',
     thumbnail: '/materials/barley-koji.jpg',
     description: '麦を麹菌で発酵させた発酵触媒',
     parameters: {
@@ -133,10 +133,10 @@ export const INITIAL_MATERIALS: Material[] = [
       moisture: 32.0,
     },
     colors: {
-      primary: '#6B8E23', // オリーブドラブ（深い緑色）
-      light: '#8FBC8F', // ダークシーグリーン
-      background: '#6B8E23', // 背景用
-      border: '#6B8E23', // ボーダー用
+      primary: '#e8c794', // 麦麹ベース色（白寄りに調整）
+      light: '#d4944a', // 淡い麦麹色
+      background: '#b46c1f', // 背景用
+      border: '#9a5a18', // 濃い麦麹色
     },
     shopifyVariantId: '45123755770012',
   },

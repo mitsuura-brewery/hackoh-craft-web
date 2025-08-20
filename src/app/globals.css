@@ -1,21 +1,21 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --background: #F5E6D3;
-  --foreground: #2D1B12;
-  
+  --background: #faf9f8;
+  --foreground: #333333;
+
   /* 発酵テーマカラー */
-  --ferment-primary: #8B4513;
-  --ferment-secondary: #A0522D;
-  --ferment-accent: #8FBC8F;
-  --ferment-light: #F5E6D3;
-  --ferment-dark: #5D2C0A;
-  
+  --ferment-primary: #8b4513;
+  --ferment-secondary: #a0522d;
+  --ferment-accent: #8fbc8f;
+  --ferment-light: #f5e6d3;
+  --ferment-dark: #5d2c0a;
+
   /* 材料タイプ別カラー */
-  --protein-primary: #CD853F;
-  --protein-light: #DEB887;
-  --koji-primary: #9ACD32;
-  --koji-light: #ADFF2F;
+  --protein-primary: #cd853f;
+  --protein-light: #deb887;
+  --koji-primary: #9acd32;
+  --koji-light: #adff2f;
 }
 
 @theme inline {
@@ -23,20 +23,20 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  
+
   /* 発酵テーマカラー */
   --color-ferment-primary: var(--ferment-primary);
   --color-ferment-secondary: var(--ferment-secondary);
   --color-ferment-accent: var(--ferment-accent);
   --color-ferment-light: var(--ferment-light);
   --color-ferment-dark: var(--ferment-dark);
-  
+
   /* 材料タイプ別カラー */
   --color-protein-primary: var(--protein-primary);
   --color-protein-light: var(--protein-light);
   --color-koji-primary: var(--koji-primary);
   --color-koji-light: var(--koji-light);
-  
+
   /* オーガニックアニメーション */
   --animate-organic-pulse: organic-pulse 3s ease-in-out infinite;
   --animate-float: float 6s ease-in-out infinite;
@@ -44,29 +44,36 @@
 }
 
 @keyframes organic-pulse {
-  0%, 100% { 
+  0%,
+  100% {
     transform: scale(1) rotate(0deg);
     border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   }
-  50% { 
+  50% {
     transform: scale(1.05) rotate(2deg);
     border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
   }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes wobble {
-  0%, 100% { 
+  0%,
+  100% {
     border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   }
-  33% { 
+  33% {
     border-radius: 70% 30% 50% 50% / 30% 60% 70% 40%;
   }
-  66% { 
+  66% {
     border-radius: 40% 60% 70% 30% / 50% 40% 30% 60%;
   }
 }
@@ -134,15 +141,15 @@ body {
   .text-4xl {
     font-size: 2.5rem;
   }
-  
+
   .text-6xl {
     font-size: 3rem;
   }
-  
+
   .grid-cols-3 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
-  
+
   .lg\:col-span-1 {
     grid-column: span 1 / span 1;
   }

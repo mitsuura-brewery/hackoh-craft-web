@@ -4,6 +4,7 @@ import { Material } from '@/types/fermentation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 interface IntegratedMaterialIconsProps {
   materials: Material[];
@@ -175,7 +176,13 @@ function MaterialIconButton({
           } as React.CSSProperties}
           title={isDisabled ? '材料の上限に達しました（15個まで）' : `${material.name}を追加`}
         >
-          <span>{material.icon}</span>
+          <Image
+            src={material.icon}
+            alt={material.shortName}
+            width={24}
+            height={24}
+            className="object-contain"
+          />
           {config.showName && (
             <span className="text-xs font-medium mt-1 text-center leading-tight">
               {material.shortName}

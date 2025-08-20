@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import rough from 'roughjs';
 import IntegratedMaterialIcons from './IntegratedMaterialIcons';
 import { Blend } from 'lucide-react';
+import Image from 'next/image';
 
 interface CompoundDisplayProps {
   selectedMaterials: Material[];
@@ -139,7 +140,7 @@ export default function CompoundDisplay({
   return (
     <animated.div
       style={containerSpring}
-      className="relative bg-white/80 rounded-3xl backdrop-blur-sm py-6 min-h-[400px] flex flex-col items-center justify-center w-full max-w-[480px] mx-auto"
+      className="relative py-6 min-h-[400px] flex flex-col items-center justify-center w-full max-w-[480px] mx-auto"
     >
       <div className="flex items-center gap-3 mb-6">
         <Blend className="text-ferment-primary" size={24} />
@@ -179,7 +180,13 @@ export default function CompoundDisplay({
                       } as React.CSSProperties
                     }
                   >
-                    <span>{material.icon}</span>
+                    <Image
+                      src={material.icon}
+                      alt={material.shortName}
+                      width={20}
+                      height={20}
+                      className="object-contain"
+                    />
                     <span>{material.shortName}</span>
                     {count > 1 && (
                       <span className="text-xs font-bold text-ferment-dark">x{count}</span>
@@ -232,7 +239,7 @@ export default function CompoundDisplay({
 
               // 材料を電子殻のように配置（最初5個は内殻、次10個は外殻）
               let radius, angle;
-              
+
               if (selectedMaterials.length === 1) {
                 // 1つの場合は中心
                 radius = 0;
@@ -241,7 +248,7 @@ export default function CompoundDisplay({
                 // 最初の5個：内殻（現在の計算方式）
                 const materialsInInnerShell = Math.min(5, selectedMaterials.length);
                 const baseRadius = Math.min(dimensions.width, dimensions.height) * 0.08;
-                
+
                 angle = (index / materialsInInnerShell) * Math.PI * 2;
                 radius = baseRadius;
               } else {
@@ -249,7 +256,7 @@ export default function CompoundDisplay({
                 const positionInOuterShell = index - 5; // 0-9の位置
                 const materialsInOuterShell = selectedMaterials.length - 5; // 外殻の材料数
                 const outerRadius = Math.min(dimensions.width, dimensions.height) * 0.18; // 固定半径
-                
+
                 angle = (positionInOuterShell / materialsInOuterShell) * Math.PI * 2;
                 radius = outerRadius;
               }
@@ -286,7 +293,13 @@ export default function CompoundDisplay({
                     className="text-3xl filter drop-shadow-lg cursor-pointer hover:brightness-110 transition-all duration-200 hover:bg-red-100/20 rounded-full p-1"
                     title={`${material.name}を削除`}
                   >
-                    {material.icon}
+                    <Image
+                      src={material.icon}
+                      alt={material.name}
+                      width={32}
+                      height={32}
+                      className="object-contain"
+                    />
                   </motion.button>
                 </animated.div>
               );

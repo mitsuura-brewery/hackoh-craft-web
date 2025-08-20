@@ -6,6 +6,7 @@ import { calculateFermentation } from '@/utils/fermentation';
 import CompoundDisplay from '@/components/CompoundDisplay';
 import NutritionPanel from '@/components/NutritionPanel';
 import PurchaseButton from '@/components/PurchaseButton';
+import Deliverables from '@/components/Deliverables';
 
 export default function FermentationLab() {
   const [selectedMaterials, setSelectedMaterials] = useState<Material[]>([]);
@@ -30,7 +31,9 @@ export default function FermentationLab() {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <div className="py-8 flex flex-col gap-y-8 md:gap-y-12 items-center">
         <header className="text-center px-4">
-          <h1 className="text-2xl md:text-4xl font-bold mb-4 text-ferment-primary">発酵の実験室</h1>
+          <h1 className="text-2xl md:text-4xl font-bold mb-4 text-ferment-primary">
+            発酵シミュレーション
+          </h1>
           <p className="text-lg text-ferment-secondary max-w-2xl mx-auto">
             目に見えない菌の営みである「発酵」の不思議な世界を体験し、
             あなただけの味噌材料キットを組み合わせてみましょう。
@@ -46,6 +49,10 @@ export default function FermentationLab() {
               materials={INITIAL_MATERIALS}
               onMaterialAdd={handleMaterialAdd}
             />
+            {/* 出来上がりイメージエリア */}
+            <div className="w-full">
+              <Deliverables selectedMaterials={selectedMaterials} />
+            </div>
           </div>
 
           {/* 成分表エリア */}
