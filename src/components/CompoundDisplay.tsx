@@ -140,11 +140,13 @@ export default function CompoundDisplay({
   return (
     <animated.div
       style={containerSpring}
-      className="relative py-6 min-h-[400px] flex flex-col items-center justify-center w-full max-w-[480px] mx-auto"
+      className="relative py-6 min-h-[400px] flex flex-col items-center justify-center w-full mx-auto"
     >
-      <div className="flex items-center gap-3 mb-6">
-        <Blend className="text-ferment-primary" size={24} />
-        <h2 className="text-2xl font-bold text-ferment-primary">合わせる</h2>
+      <div className="flex flex-col items-center gap-4 mb-6">
+        <div className="flex items-center gap-3">
+          <Blend className="text-ferment-primary" size={24} />
+          <h2 className="text-2xl font-bold text-ferment-primary">合わせる</h2>
+        </div>
       </div>
 
       <div className="relative flex-1 flex items-center justify-center w-full">
@@ -313,7 +315,7 @@ export default function CompoundDisplay({
               animate={{ opacity: 1 }}
               className="absolute inset-0 flex flex-col items-center justify-center text-ferment-secondary/60"
             >
-              <motion.div
+              {/* <motion.div
                 animate={{
                   scale: [1, 1.1, 1],
                   rotate: [0, 5, -5, 0],
@@ -322,11 +324,11 @@ export default function CompoundDisplay({
                 className="text-6xl mb-4"
               >
                 🧪
-              </motion.div>
+              </motion.div> */}
               <p className="text-center">
                 左右のアイコンで
                 <br />
-                材料を追加しよう
+                材料を追加
               </p>
             </motion.div>
           )}

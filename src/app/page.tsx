@@ -11,8 +11,6 @@ import Deliverables from '@/components/Deliverables';
 export default function FermentationLab() {
   const [selectedMaterials, setSelectedMaterials] = useState<Material[]>([]);
 
-  const calculation = calculateFermentation(selectedMaterials);
-
   const handleMaterialAdd = (material: Material) => {
     setSelectedMaterials((prev) => [...prev, material]);
   };
@@ -40,28 +38,42 @@ export default function FermentationLab() {
           </p>
         </header>
 
-        <div className="flex flex-col lg:flex-row gap-16 max-w-5xl mx-auto">
+        <div className="max-w-3xl w-full mx-auto space-y-8">
           {/* 化合物表示エリア（横幅一杯） */}
-          <div className="w-full">
-            <CompoundDisplay
-              selectedMaterials={selectedMaterials}
-              onMaterialRemove={handleMaterialRemove}
-              materials={INITIAL_MATERIALS}
-              onMaterialAdd={handleMaterialAdd}
-            />
-            {/* 出来上がりイメージエリア */}
-            <div className="w-full">
-              <Deliverables selectedMaterials={selectedMaterials} />
-            </div>
-          </div>
+          <CompoundDisplay
+            selectedMaterials={selectedMaterials}
+            onMaterialRemove={handleMaterialRemove}
+            materials={INITIAL_MATERIALS}
+            onMaterialAdd={handleMaterialAdd}
+          />
 
-          {/* 成分表エリア */}
-          <div className="w-full">
-            <NutritionPanel
-              nutritionFacts={calculation.nutritionFacts}
-              fermentationPeriod={calculation.fermentationPeriod}
-              recommendation={calculation.recommendation}
-            />
+          {/* 出来上がりシミュレーション */}
+          <Deliverables selectedMaterials={selectedMaterials} />
+
+          {/* 地域選択ドロップダウン */}
+          <div className="flex flex-col items-center gap-2">
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium text-ferment-dark">お住まいの地域</label>
+              <select
+                className="px-4 py-2 border border-ferment-secondary/30 rounded-lg bg-white text-ferment-dark focus:outline-none focus:ring-2 focus:ring-ferment-primary/50 focus:border-ferment-primary"
+                defaultValue="関東"
+              >
+                <option value="北海道">北海道</option>
+                <option value="東北">東北</option>
+                <option value="北関東">北関東</option>
+                <option value="関東">関東</option>
+                <option value="北陸">北陸</option>
+                <option value="東海">東海</option>
+                <option value="関西">関西</option>
+                <option value="中国">中国</option>
+                <option value="四国">四国</option>
+                <option value="九州">九州</option>
+                <option value="沖縄">沖縄</option>
+              </select>
+            </div>
+            <p className="text-xs text-ferment-secondary/70 text-center">
+              地域の時期の平均気温を反映します
+            </p>
           </div>
         </div>
 

@@ -55,11 +55,6 @@ export default function NutritionPanel({
   return (
     <animated.div style={panelSpring}>
       <div className="flex flex-col items-center p-6 min-w-[375px]">
-        <div className="flex items-center gap-3 mb-6">
-          <Activity className="text-ferment-primary" size={24} />
-          <h2 className="text-2xl font-bold text-ferment-primary">成分表</h2>
-        </div>
-
         <AnimatePresence mode="wait">
           {hasData ? (
             <motion.div
