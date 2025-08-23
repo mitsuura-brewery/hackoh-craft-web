@@ -249,7 +249,7 @@ function MaterialIconButton({
               )}
               {material.category === 'koji' && (
                 <>
-                  <div>酵素活性: {material.parameters.enzyme}</div>
+                  <div>でんぷん: {material.parameters.starch}g</div>
                   {displayMode === 'full' && <div>水分: {material.parameters.moisture}%</div>}
                 </>
               )}

@@ -3,7 +3,7 @@
 import { NutritionFacts } from '@/types/fermentation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSpring, animated } from '@react-spring/web';
-import { Activity, Clock, Lightbulb } from 'lucide-react';
+import { Clock, Lightbulb } from 'lucide-react';
 
 interface NutritionPanelProps {
   nutritionFacts: NutritionFacts;

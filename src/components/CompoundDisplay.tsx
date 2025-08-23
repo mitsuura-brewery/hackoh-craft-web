@@ -1,12 +1,12 @@
 'use client';
 
-import { Material, MaterialCategory } from '@/types/fermentation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Material } from '@/types/fermentation';
+import { motion } from 'motion/react';
+import { AnimatePresence } from 'motion/react';
 import { useSpring, animated, useTransition } from '@react-spring/web';
 import { useEffect, useRef, useState } from 'react';
 import rough from 'roughjs';
 import IntegratedMaterialIcons from './IntegratedMaterialIcons';
-import { Blend } from 'lucide-react';
 import Image from 'next/image';
 
 interface CompoundDisplayProps {
@@ -24,41 +24,6 @@ export default function CompoundDisplay({
 }: CompoundDisplayProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions, setDimensions] = useState({ width: 375, height: 300 });
-
-  // 警告メッセージを判定する関数
-  const getWarningMessage = (materials: Material[]): string | null => {
-    if (materials.length === 0) return null;
-
-    const materialCounts = materials.reduce((acc, material) => {
-      acc[material.category] = (acc[material.category] || 0) + 1;
-      return acc;
-    }, {} as Record<MaterialCategory, number>);
-
-    const proteinCount = materialCounts.protein || 0;
-    const kojiCount = materialCounts.koji || 0;
-
-    // 麹がない場合
-    if (proteinCount > 0 && kojiCount === 0) {
-      return '麹菌が必要です。発酵が進みません。';
-    }
-
-    // タンパク質がない場合
-    if (kojiCount > 0 && proteinCount === 0) {
-      return 'タンパク質材料が必要です。';
-    }
-
-    // 麹が多すぎる場合
-    if (kojiCount > proteinCount * 2) {
-      return '麹菌が多すぎます。苦味が強くなる可能性があります。';
-    }
-
-    // タンパク質が多すぎる場合
-    if (proteinCount > kojiCount * 3) {
-      return 'タンパク質が多すぎます。発酵が不十分になる可能性があります。';
-    }
-
-    return null;
-  };
 
   const containerSpring = useSpring({
     opacity: 1,
@@ -140,81 +105,9 @@ export default function CompoundDisplay({
   return (
     <animated.div
       style={containerSpring}
-      className="relative py-6 min-h-[400px] flex flex-col items-center justify-center w-full mx-auto"
+      className="relative min-h-[400px] flex flex-col items-center justify-center w-full mx-auto"
     >
-      <div className="flex flex-col items-center gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <Blend className="text-ferment-primary" size={24} />
-          <h2 className="text-2xl font-bold text-ferment-primary">合わせる</h2>
-        </div>
-      </div>
-
       <div className="relative flex-1 flex items-center justify-center w-full">
-        {/* 選択中の材料一覧（キャンバス上端にabsolute配置） */}
-        <div className="absolute top-0 left-0 right-0 z-20 flex justify-center">
-          <AnimatePresence>
-            {selectedMaterials.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                className="flex flex-wrap justify-center gap-2 px-4 py-2"
-              >
-                {Object.entries(
-                  selectedMaterials.reduce((acc, material) => {
-                    acc[material.id] = acc[material.id] || { material, count: 0 };
-                    acc[material.id].count++;
-                    return acc;
-                  }, {} as Record<string, { material: Material; count: number }>),
-                ).map(([id, { material, count }]) => (
-                  <motion.span
-                    key={id}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm border text-ferment-dark"
-                    style={
-                      {
-                        '--material-bg': `${material.colors.primary}40`,
-                        '--material-border': `${material.colors.primary}80`,
-                        backgroundColor: 'var(--material-bg)',
-                        borderColor: 'var(--material-border)',
-                      } as React.CSSProperties
-                    }
-                  >
-                    <Image
-                      src={material.icon}
-                      alt={material.shortName}
-                      width={20}
-                      height={20}
-                      className="object-contain"
-                    />
-                    <span>{material.shortName}</span>
-                    {count > 1 && (
-                      <span className="text-xs font-bold text-ferment-dark">x{count}</span>
-                    )}
-                  </motion.span>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* 警告文エリア（キャンバス下端にabsolute配置） */}
-        <div className="absolute bottom-0 left-0 mx-6 right-0 z-20 flex justify-center">
-          <AnimatePresence>
-            {getWarningMessage(selectedMaterials) && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="px-4 py-2 bg-red-100/95 backdrop-blur-md border border-red-300 rounded-lg text-red-700 text-sm text-center shadow-lg"
-              >
-                ⚠️ {getWarningMessage(selectedMaterials)}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
         {/* オーガニック境界線のキャンバス */}
         <canvas
           ref={canvasRef}

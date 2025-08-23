@@ -2,7 +2,7 @@
 
 import { Material } from '@/types/fermentation';
 import { generateShopifyUrl } from '@/utils/fermentation';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { useSpring, animated } from '@react-spring/web';
 import { ShoppingCart } from 'lucide-react';
 import { useState } from 'react';

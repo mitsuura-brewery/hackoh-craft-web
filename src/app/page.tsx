@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import { Material, INITIAL_MATERIALS } from '@/types/fermentation';
-import { calculateFermentation } from '@/utils/fermentation';
 import CompoundDisplay from '@/components/CompoundDisplay';
-import NutritionPanel from '@/components/NutritionPanel';
 import PurchaseButton from '@/components/PurchaseButton';
 import Deliverables from '@/components/Deliverables';
 
 export default function FermentationLab() {
   const [selectedMaterials, setSelectedMaterials] = useState<Material[]>([]);
+  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth() + 1);
+  const [selectedRegion, setSelectedRegion] = useState<string>('関東');
 
   const handleMaterialAdd = (material: Material) => {
     setSelectedMaterials((prev) => [...prev, material]);
@@ -48,32 +48,57 @@ export default function FermentationLab() {
           />
 
           {/* 出来上がりシミュレーション */}
-          <Deliverables selectedMaterials={selectedMaterials} />
+          <Deliverables
+            selectedMaterials={selectedMaterials}
+            selectedMonth={selectedMonth}
+            selectedRegion={selectedRegion}
+          />
 
-          {/* 地域選択ドロップダウン */}
+          {/* 仕込み条件選択 */}
           <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center gap-4">
-              <label className="text-sm font-medium text-ferment-dark">お住まいの地域</label>
-              <select
-                className="px-4 py-2 border border-ferment-secondary/30 rounded-lg bg-white text-ferment-dark focus:outline-none focus:ring-2 focus:ring-ferment-primary/50 focus:border-ferment-primary"
-                defaultValue="関東"
-              >
-                <option value="北海道">北海道</option>
-                <option value="東北">東北</option>
-                <option value="北関東">北関東</option>
-                <option value="関東">関東</option>
-                <option value="北陸">北陸</option>
-                <option value="東海">東海</option>
-                <option value="関西">関西</option>
-                <option value="中国">中国</option>
-                <option value="四国">四国</option>
-                <option value="九州">九州</option>
-                <option value="沖縄">沖縄</option>
-              </select>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-ferment-dark">お住まいの地域</label>
+                <select
+                  className="px-4 py-2 border border-ferment-secondary/30 rounded-lg bg-white text-ferment-dark focus:outline-none focus:ring-2 focus:ring-ferment-primary/50 focus:border-ferment-primary"
+                  value={selectedRegion}
+                  onChange={(e) => setSelectedRegion(e.target.value)}
+                >
+                  <option value="北海道">北海道</option>
+                  <option value="東北">東北</option>
+                  <option value="北関東">北関東</option>
+                  <option value="関東">関東</option>
+                  <option value="北陸">北陸</option>
+                  <option value="東海">東海</option>
+                  <option value="関西">関西</option>
+                  <option value="中国">中国</option>
+                  <option value="四国">四国</option>
+                  <option value="九州">九州</option>
+                  <option value="沖縄">沖縄</option>
+                </select>
+              </div>
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-ferment-dark">仕込む月</label>
+                <select
+                  className="px-4 py-2 border border-ferment-secondary/30 rounded-lg bg-white text-ferment-dark focus:outline-none focus:ring-2 focus:ring-ferment-primary/50 focus:border-ferment-primary"
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                >
+                  <option value={1}>1月</option>
+                  <option value={2}>2月</option>
+                  <option value={3}>3月</option>
+                  <option value={4}>4月</option>
+                  <option value={5}>5月</option>
+                  <option value={6}>6月</option>
+                  <option value={7}>7月</option>
+                  <option value={8}>8月</option>
+                  <option value={9}>9月</option>
+                  <option value={10}>10月</option>
+                  <option value={11}>11月</option>
+                  <option value={12}>12月</option>
+                </select>
+              </div>
             </div>
-            <p className="text-xs text-ferment-secondary/70 text-center">
-              地域の時期の平均気温を反映します
-            </p>
           </div>
         </div>
 
