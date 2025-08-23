@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { AnimatePresence } from 'motion/react';
 import { Material, MaterialCategory } from '@/types/fermentation';
 import { calculateFermentationSpecs } from '@/utils/fermentation';
+import AnimatedNumber from '@/components/AnimatedNumber';
+import SlideInText from '@/components/SlideInText';
 
 interface DeliverablesProps {
   selectedMaterials: Material[];
@@ -18,9 +20,14 @@ export default function Deliverables({
   const specs = calculateFermentationSpecs(selectedMaterials, selectedMonth, selectedRegion);
   const hasMaterials = selectedMaterials.length > 0;
 
-  // 警告メッセージを判定する関数
-  const getWarningMessage = (materials: Material[]): string | null => {
-    if (materials.length === 0) return null;
+  // メッセージとアイコンを判定する関数
+  const getMessageInfo = (materials: Material[]): { message: string; type: 'info' | 'warning' } => {
+    if (materials.length === 0) {
+      return {
+        message: 'できあがりのシミュレーション結果を確認できます',
+        type: 'info',
+      };
+    }
 
     const materialCounts = materials.reduce((acc, material) => {
       acc[material.category] = (acc[material.category] || 0) + 1;
@@ -32,25 +39,40 @@ export default function Deliverables({
 
     // 麹がない場合
     if (proteinCount > 0 && kojiCount === 0) {
-      return '麹菌が必要です。発酵が進みません。';
+      return {
+        message: '麹菌が必要です。発酵が進みません。',
+        type: 'warning',
+      };
     }
 
     // タンパク質がない場合
     if (kojiCount > 0 && proteinCount === 0) {
-      return 'タンパク質材料が必要です。';
+      return {
+        message: 'タンパク質材料が必要です。',
+        type: 'warning',
+      };
     }
 
     // 麹が多すぎる場合
     if (kojiCount > proteinCount * 2) {
-      return '麹菌が多すぎます。苦味が強くなる可能性があります。';
+      return {
+        message: '麹菌が多すぎます。苦味が強くなる可能性があります。',
+        type: 'warning',
+      };
     }
 
     // タンパク質が多すぎる場合
     if (proteinCount > kojiCount * 3) {
-      return 'タンパク質が多すぎます。発酵が不十分になる可能性があります。';
+      return {
+        message: 'タンパク質が多すぎます。発酵が不十分になる可能性があります。',
+        type: 'warning',
+      };
     }
 
-    return null;
+    return {
+      message: '',
+      type: 'info',
+    };
   };
 
   const getImageSrc = () => {
@@ -95,7 +117,7 @@ export default function Deliverables({
   };
 
   const info = getMisoInfo();
-  const warningMessage = getWarningMessage(selectedMaterials);
+  const messageInfo = getMessageInfo(selectedMaterials);
 
   return (
     <div className="w-full flex gap-8 mx-auto bg-white rounded-lg shadow-md p-8">
@@ -111,21 +133,40 @@ export default function Deliverables({
       <div className="flex flex-col gap-4 w-full min-h-[200px]">
         {/* メインの説明文 */}
         <div className="min-h-[60px]">
-          <p className="text-lg text-ferment-dark leading-relaxed">
-            {warningMessage ? (
-              <span className="text-red-700">⚠️ {warningMessage}</span>
+          <AnimatePresence mode="wait">
+            {messageInfo.type === 'warning' ? (
+              <SlideInText
+                key="warning"
+                direction="left"
+                className="text-lg text-ferment-dark leading-relaxed"
+              >
+                <span className="text-red-700">⚠️ {messageInfo.message}</span>
+              </SlideInText>
+            ) : messageInfo.type === 'info' && messageInfo.message ? (
+              <SlideInText
+                key="info"
+                direction="left"
+                className="text-lg text-ferment-dark leading-relaxed"
+              >
+                <span className="text-blue-700">ℹ️ {messageInfo.message}</span>
+              </SlideInText>
             ) : hasMaterials && info ? (
-              <>
+              <SlideInText
+                key="result"
+                direction="left"
+                className="text-lg text-ferment-dark leading-relaxed"
+              >
                 この組み合わせは
-                <span className="font-bold text-ferment-primary">12月（今から4ヶ月）</span>ごろに
+                <span className="font-bold text-xl text-ferment-primary mx-1">
+                  今から4ヶ月（2025年12月）ごろ
+                </span>
+                に
                 <br />
-                <span className="font-bold text-ferment-primary">薩摩麦味噌</span>
+                <span className="font-bold text-ferment-primary text-xl mx-1">薩摩麦味噌</span>
                 と似た成分の味噌ができあがります
-              </>
-            ) : (
-              'できあがりのシミュレーション結果を確認できます'
-            )}
-          </p>
+              </SlideInText>
+            ) : null}
+          </AnimatePresence>
         </div>
 
         {/* 選択中の材料一覧（キャンバス上端にabsolute配置） */}
@@ -181,48 +222,89 @@ export default function Deliverables({
         {/* 仕様一覧 */}
         <div className="mb-6">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="text-center">
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
               <p className="text-sm text-ferment-secondary mb-1">麹歩合</p>
               <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials ? specs.kojiRatio || '-' : ''}
+                {hasMaterials && specs.kojiRatio ? <AnimatedNumber value={specs.kojiRatio} /> : '-'}
               </p>
-            </div>
-            <div className="text-center">
+            </motion.div>
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
               <p className="text-sm text-ferment-secondary mb-1">加水量</p>
               <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials ? specs.waterAmount || '-' : ''}
-                {hasMaterials && specs.waterAmount > 0 && (
-                  <span className="text-sm text-ferment-secondary">ml</span>
+                {hasMaterials && specs.waterAmount ? (
+                  <>
+                    <AnimatedNumber value={specs.waterAmount} />
+                    <span className="text-sm text-ferment-secondary">ml</span>
+                  </>
+                ) : (
+                  '-'
                 )}
               </p>
-            </div>
-            <div className="text-center">
+            </motion.div>
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
               <p className="text-sm text-ferment-secondary mb-1">塩分</p>
               <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials ? specs.saltRatio || '-' : ''}
-                {hasMaterials && specs.saltRatio > 0 && (
-                  <span className="text-sm text-ferment-secondary">%</span>
+                {hasMaterials && specs.saltRatio ? (
+                  <>
+                    <AnimatedNumber value={specs.saltRatio} />
+                    <span className="text-sm text-ferment-secondary">%</span>
+                  </>
+                ) : (
+                  '-'
                 )}
               </p>
-            </div>
-            <div className="text-center">
+            </motion.div>
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
               <p className="text-sm text-ferment-secondary mb-1">重量</p>
               <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials ? specs.totalWeight || '-' : ''}
-                {hasMaterials && specs.totalWeight > 0 && (
-                  <span className="text-sm text-ferment-secondary">g</span>
+                {hasMaterials && specs.totalWeight ? (
+                  <>
+                    <AnimatedNumber value={specs.totalWeight} />
+                    <span className="text-sm text-ferment-secondary">g</span>
+                  </>
+                ) : (
+                  '-'
                 )}
               </p>
-            </div>
-            <div className="text-center">
+            </motion.div>
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
               <p className="text-sm text-ferment-secondary mb-1">期間目安</p>
               <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials ? specs.fermentationPeriod || '-' : ''}
-                {hasMaterials && specs.fermentationPeriod > 0 && (
-                  <span className="text-sm text-ferment-secondary">日</span>
+                {hasMaterials && specs.fermentationPeriod ? (
+                  <>
+                    <AnimatedNumber value={specs.fermentationPeriod} />
+                    <span className="text-sm text-ferment-secondary">日</span>
+                  </>
+                ) : (
+                  '-'
                 )}
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
