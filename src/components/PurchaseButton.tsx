@@ -1,7 +1,7 @@
 'use client';
 
-import { Material } from '@/types/fermentation';
-import { generateShopifyUrl } from '@/utils/fermentation';
+import { Material } from '@/types/material';
+import { generateShopifyUrl } from '@/utils/material';
 import { motion } from 'motion/react';
 import { useSpring, animated } from '@react-spring/web';
 import { ShoppingCart } from 'lucide-react';

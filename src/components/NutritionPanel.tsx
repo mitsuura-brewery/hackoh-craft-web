@@ -1,19 +1,19 @@
 'use client';
 
-import { NutritionFacts } from '@/types/fermentation';
+import { NutritionFacts } from '@/types/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSpring, animated } from '@react-spring/web';
 import { Clock, Lightbulb } from 'lucide-react';
 
 interface NutritionPanelProps {
   nutritionFacts: NutritionFacts;
-  fermentationPeriod: number;
+  materialPeriod: number;
   recommendation: string;
 }
 
 export default function NutritionPanel({
   nutritionFacts,
-  fermentationPeriod,
+  materialPeriod,
   recommendation,
 }: NutritionPanelProps) {
   const hasData = nutritionFacts.calories > 0;
@@ -82,7 +82,7 @@ export default function NutritionPanel({
                   <Clock className="text-ferment-primary" size={20} />
                   <h3 className="font-semibold text-ferment-primary">発酵期間</h3>
                 </div>
-                <p className="text-2xl font-bold text-ferment-primary">{fermentationPeriod}日</p>
+                <p className="text-2xl font-bold text-ferment-primary">{materialPeriod}日</p>
               </motion.div>
 
               {/* 推奨メッセージ */}

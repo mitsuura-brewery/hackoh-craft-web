@@ -2,10 +2,10 @@ import {
   Material, 
   Compound, 
   NutritionFacts, 
-  FermentationCalculationResult,
+  MaterialCalculationResult,
   SEASONAL_TEMPERATURES,
   getCurrentSeason
-} from '@/types/fermentation';
+} from '@/types/material';
 
 // 地域別・月別平均気温データ（概算値）
 export const REGIONAL_TEMPERATURES: Record<string, Record<number, number>> = {
@@ -55,27 +55,27 @@ export const REGIONAL_TEMPERATURES: Record<string, Record<number, number>> = {
   }
 };
 
-export interface FermentationSpecs {
+export interface MaterialSpecs {
   kojiRatio: number;  // 麹歩合
   waterAmount: number; // 加水量(ml)
   saltRatio: number;  // 塩分(%)
   totalWeight: number; // 重量(g)
-  fermentationPeriod: number; // 期間目安(日)
+  materialPeriod: number; // 期間目安(日)
   moistureRatio: number; // 水分(%) - 内部計算用
 }
 
-export function calculateFermentationSpecs(
+export function calculateMaterialSpecs(
   selectedMaterials: Material[],
   month: number,
   region: string
-): FermentationSpecs {
+): MaterialSpecs {
   if (selectedMaterials.length === 0) {
     return {
       kojiRatio: 0,
       waterAmount: 0,
       saltRatio: 0,
       totalWeight: 0,
-      fermentationPeriod: 0,
+      materialPeriod: 0,
       moistureRatio: 0
     };
   }
@@ -116,33 +116,33 @@ export function calculateFermentationSpecs(
 
   // 期間目安計算
   const averageTemperature = REGIONAL_TEMPERATURES[region]?.[month] || 20;
-  let baseFermentationPeriod = 120; // ベース期間
+  let baseMaterialPeriod = 120; // ベース期間
 
   // 温度による調整：20度を基準に、暖かければ短く、寒ければ長く
   if (averageTemperature > 20) {
     const temperatureDifference = averageTemperature - 20;
-    baseFermentationPeriod = Math.max(60, baseFermentationPeriod - (temperatureDifference * 3));
+    baseMaterialPeriod = Math.max(60, baseMaterialPeriod - (temperatureDifference * 3));
   } else if (averageTemperature < 20) {
     const temperatureDifference = 20 - averageTemperature;
-    baseFermentationPeriod = Math.min(180, baseFermentationPeriod + (temperatureDifference * 2));
+    baseMaterialPeriod = Math.min(180, baseMaterialPeriod + (temperatureDifference * 2));
   }
 
-  const fermentationPeriod = Math.round(baseFermentationPeriod);
+  const materialPeriod = Math.round(baseMaterialPeriod);
 
   return {
     kojiRatio,
     waterAmount,
     saltRatio: Math.round(saltRatio * 10) / 10, // 小数点第1位まで
     totalWeight,
-    fermentationPeriod,
+    materialPeriod,
     moistureRatio: Math.round(moistureRatio * 10) / 10 // 小数点第1位まで
   };
 }
 
-export const calculateFermentation = (materials: Material[]): FermentationCalculationResult => {
+export const calculateMaterial = (materials: Material[]): MaterialCalculationResult => {
   if (materials.length === 0) {
     return {
-      fermentationPeriod: 0,
+      materialPeriod: 0,
       nutritionFacts: {
         protein: 0,
         carbohydrate: 0,
@@ -159,7 +159,7 @@ export const calculateFermentation = (materials: Material[]): FermentationCalcul
   const currentTemp = SEASONAL_TEMPERATURES[currentSeason];
   
   // 基本発酵期間の計算
-  const baseFermentationDays = 30;
+  const baseMaterialDays = 30;
   const proteinMaterials = materials.filter(m => m.category === 'protein');
   const kojiMaterials = materials.filter(m => m.category === 'koji');
   
@@ -177,8 +177,8 @@ export const calculateFermentation = (materials: Material[]): FermentationCalcul
   const tempFactor = currentTemp > 20 ? 0.8 : currentTemp < 15 ? 1.3 : 1.0;
   
   // 発酵期間の計算
-  const fermentationPeriod = Math.round(
-    (baseFermentationDays + proteinFactor - enzymeFactor) * tempFactor
+  const materialPeriod = Math.round(
+    (baseMaterialDays + proteinFactor - enzymeFactor) * tempFactor
   );
   
   // 栄養成分の計算
@@ -199,16 +199,16 @@ export const calculateFermentation = (materials: Material[]): FermentationCalcul
     recommendation = 'タンパク質材料を追加してください';
   } else if (kojiMaterials.length === 0) {
     recommendation = '麹材料を追加してください';
-  } else if (fermentationPeriod < 20) {
+  } else if (materialPeriod < 20) {
     recommendation = '短期間で発酵が完了します。風味が軽やかになります。';
-  } else if (fermentationPeriod > 45) {
+  } else if (materialPeriod > 45) {
     recommendation = '長期発酵により、深いコクと旨味が生まれます。';
   } else {
     recommendation = 'バランスの良い発酵期間です。';
   }
   
   return {
-    fermentationPeriod: Math.max(1, fermentationPeriod),
+    materialPeriod: Math.max(1, materialPeriod),
     nutritionFacts,
     recommendation
   };
@@ -230,12 +230,12 @@ export const generateShopifyUrl = (materials: Material[], baseUrl: string = 'htt
 };
 
 export const createCompound = (materials: Material[]): Compound => {
-  const calculation = calculateFermentation(materials);
+  const calculation = calculateMaterial(materials);
   
   return {
     id: `compound-${Date.now()}`,
     materials,
-    fermentationPeriod: calculation.fermentationPeriod,
+    materialPeriod: calculation.materialPeriod,
     nutritionFacts: calculation.nutritionFacts,
     createdAt: new Date()
   };

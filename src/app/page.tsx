@@ -1,12 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { Material, INITIAL_MATERIALS } from '@/types/fermentation';
+import { Material } from '@/types/material';
+import { SOYBEAN, CHICKPEA, RICE_KOJI, BARLEY_KOJI } from '@/constants/materials';
 import CompoundDisplay from '@/components/CompoundDisplay';
 import PurchaseButton from '@/components/PurchaseButton';
 import Deliverables from '@/components/Deliverables';
 
-export default function FermentationLab() {
+const INITIAL_MATERIALS: Material[] = [
+  SOYBEAN,
+  CHICKPEA,
+  RICE_KOJI,
+  BARLEY_KOJI,
+];
+
+export default function MaterialLab() {
   const [selectedMaterials, setSelectedMaterials] = useState<Material[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth() + 1);
   const [selectedRegion, setSelectedRegion] = useState<string>('関東');

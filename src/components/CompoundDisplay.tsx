@@ -1,6 +1,6 @@
 'use client';
 
-import { Material } from '@/types/fermentation';
+import { Material } from '@/types/material';
 import { motion } from 'motion/react';
 import { AnimatePresence } from 'motion/react';
 import { useSpring, animated, useTransition } from '@react-spring/web';

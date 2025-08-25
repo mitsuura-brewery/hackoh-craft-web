@@ -35,7 +35,7 @@ export default function AnimatedNumber({
       
       const animate = () => {
         currentFrame++;
-        const progress = currentFrame / totalFrames;
+        // const progress = currentFrame / totalFrames;
         const currentValue = startValue + (stepSize * currentFrame);
         
         // 整数部分のみ表示（小数点以下は表示しない）

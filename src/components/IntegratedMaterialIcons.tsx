@@ -1,6 +1,6 @@
 'use client';
 
-import { Material } from '@/types/fermentation';
+import { Material } from '@/types/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';

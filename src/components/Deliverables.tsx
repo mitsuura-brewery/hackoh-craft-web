@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import { motion } from 'motion/react';
 import { AnimatePresence } from 'motion/react';
-import { Material, MaterialCategory } from '@/types/fermentation';
-import { calculateFermentationSpecs } from '@/utils/fermentation';
+import { Material, MaterialCategory } from '@/types/material';
+import { calculateMaterialSpecs } from '@/utils/material';
 import AnimatedNumber from '@/components/AnimatedNumber';
 import SlideInText from '@/components/SlideInText';
 
@@ -17,7 +17,7 @@ export default function Deliverables({
   selectedMonth,
   selectedRegion,
 }: DeliverablesProps) {
-  const specs = calculateFermentationSpecs(selectedMaterials, selectedMonth, selectedRegion);
+  const specs = calculateMaterialSpecs(selectedMaterials, selectedMonth, selectedRegion);
   const hasMaterials = selectedMaterials.length > 0;
 
   // メッセージとアイコンを判定する関数
@@ -295,9 +295,9 @@ export default function Deliverables({
             >
               <p className="text-sm text-ferment-secondary mb-1">期間目安</p>
               <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials && specs.fermentationPeriod ? (
+                {hasMaterials && specs.materialPeriod ? (
                   <>
-                    <AnimatedNumber value={specs.fermentationPeriod} />
+                    <AnimatedNumber value={specs.materialPeriod} />
                     <span className="text-sm text-ferment-secondary">日</span>
                   </>
                 ) : (
