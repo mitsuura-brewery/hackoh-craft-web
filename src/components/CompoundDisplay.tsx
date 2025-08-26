@@ -9,6 +9,14 @@ import rough from 'roughjs';
 import IntegratedMaterialIcons from './IntegratedMaterialIcons';
 import Image from 'next/image';
 import { SOYBEAN, RICE_KOJI } from '@/constants/materials';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
 
 interface CompoundDisplayProps {
   selectedMaterials: Material[];
@@ -248,21 +256,20 @@ export default function CompoundDisplay({
           exit={{ opacity: 0, y: -10 }}
           className="absolute top-0 left-1/2 -translate-x-1/2"
         >
-          <select
-            onChange={(e) => {
-              if (e.target.value === 'kaga') {
+          <Select
+            onValueChange={(value) => {
+              if (value === 'kaga') {
                 onReplaceMaterials([SOYBEAN, RICE_KOJI]);
-                e.target.value = ''; // リセット
               }
             }}
-            className="px-3 py-1 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 hover:border-gray-400 rounded-md bg-white hover:bg-gray-50 transition-all duration-200"
-            defaultValue=""
           >
-            <option value="" disabled>
-              ご当地味噌テンプレート
-            </option>
-            <option value="kaga">加賀味噌</option>
-          </select>
+            <SelectTrigger className="w-[180px] h-8 text-xs">
+              <SelectValue placeholder="ご当地味噌テンプレート" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="kaga">加賀味噌</SelectItem>
+            </SelectContent>
+          </Select>
         </motion.div>
       )}
 
@@ -274,12 +281,14 @@ export default function CompoundDisplay({
           exit={{ opacity: 0, y: 10 }}
           className="absolute bottom-0 left-1/2 -translate-x-1/2"
         >
-          <button
+          <Button
             onClick={onReset}
-            className="px-3 py-1 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 hover:border-gray-400 rounded-md bg-white hover:bg-gray-50 transition-all duration-200"
+            variant="outline"
+            size="sm"
+            className="h-8 text-xs"
           >
             リセット
-          </button>
+          </Button>
         </motion.div>
       )}
     </animated.div>
