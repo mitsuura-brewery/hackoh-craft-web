@@ -14,6 +14,7 @@ interface CompoundDisplayProps {
   onMaterialRemove?: (materialId: string) => void;
   materials: Material[];
   onMaterialAdd: (material: Material) => void;
+  onReset?: () => void;
 }
 
 export default function CompoundDisplay({
@@ -21,6 +22,7 @@ export default function CompoundDisplay({
   onMaterialRemove,
   materials,
   onMaterialAdd,
+  onReset,
 }: CompoundDisplayProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions, setDimensions] = useState({ width: 375, height: 300 });
@@ -105,7 +107,7 @@ export default function CompoundDisplay({
   return (
     <animated.div
       style={containerSpring}
-      className="relative min-h-[400px] flex flex-col items-center justify-center w-full mx-auto"
+      className="relative min-h-[300px] sm:min-h-[400px] flex flex-col items-center justify-center w-full mx-auto"
     >
       <div className="relative flex-1 flex items-center justify-center w-full">
         {/* オーガニック境界線のキャンバス */}
@@ -234,6 +236,23 @@ export default function CompoundDisplay({
           onMaterialAdd={onMaterialAdd}
         />
       </div>
+
+      {/* リセットボタン */}
+      {selectedMaterials.length > 0 && onReset && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          className="absolute bottom-0 left-1/2 -translate-x-1/2"
+        >
+          <button
+            onClick={onReset}
+            className="px-3 py-1 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 hover:border-gray-400 rounded-md bg-white hover:bg-gray-50 transition-all duration-200"
+          >
+            リセット
+          </button>
+        </motion.div>
+      )}
     </animated.div>
   );
 }

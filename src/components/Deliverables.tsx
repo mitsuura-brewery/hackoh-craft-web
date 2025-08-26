@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { AnimatePresence } from 'motion/react';
 import { Material, MaterialCategory } from '@/types/material';
 import { calculateMaterialSpecs } from '@/utils/material';
+import { getSimilarMisoInfo } from '@/utils/miso';
 import AnimatedNumber from '@/components/AnimatedNumber';
 import SlideInText from '@/components/SlideInText';
 
@@ -21,7 +22,10 @@ export default function Deliverables({
   const hasMaterials = selectedMaterials.length > 0;
 
   // メッセージとアイコンを判定する関数
-  const getMessageInfo = (materials: Material[]): { message: string; type: 'info' | 'warning' } => {
+  const getMessageInfo = (
+    materials: Material[],
+    specs: MaterialSpecs,
+  ): { message: string; type: 'info' | 'warning' } => {
     if (materials.length === 0) {
       return {
         message: 'できあがりのシミュレーション結果を確認できます',
@@ -37,34 +41,18 @@ export default function Deliverables({
     const proteinCount = materialCounts.protein || 0;
     const kojiCount = materialCounts.koji || 0;
 
-    // 麹がない場合
+    // タンパク質のみ選んでいる場合
     if (proteinCount > 0 && kojiCount === 0) {
       return {
-        message: '麹菌が必要です。発酵が進みません。',
+        message: '麹を最低１袋は選んでください。',
         type: 'warning',
       };
     }
 
-    // タンパク質がない場合
+    // 麹のみ選んでいる場合
     if (kojiCount > 0 && proteinCount === 0) {
       return {
-        message: 'タンパク質材料が必要です。',
-        type: 'warning',
-      };
-    }
-
-    // 麹が多すぎる場合
-    if (kojiCount > proteinCount * 2) {
-      return {
-        message: '麹菌が多すぎます。苦味が強くなる可能性があります。',
-        type: 'warning',
-      };
-    }
-
-    // タンパク質が多すぎる場合
-    if (proteinCount > kojiCount * 3) {
-      return {
-        message: 'タンパク質が多すぎます。発酵が不十分になる可能性があります。',
+        message: 'タンパク質を最低１袋は選んでください。',
         type: 'warning',
       };
     }
@@ -75,62 +63,37 @@ export default function Deliverables({
     };
   };
 
-  const getImageSrc = () => {
-    const kojiMaterials = selectedMaterials.filter((material) => material.category === 'koji');
-    const hasRiceKoji = kojiMaterials.some((material) => material.id === 'rice-koji');
-    const hasBarleyKoji = kojiMaterials.some((material) => material.id === 'barley-koji');
+  const misoInfo = getSimilarMisoInfo(selectedMaterials, specs);
+  const messageInfo = getMessageInfo(selectedMaterials, specs);
 
-    if (hasRiceKoji && hasBarleyKoji) {
-      return '/img/kyushu-awase.jpg';
-    } else if (hasRiceKoji) {
-      return '/img/kaga.jpg';
-    } else if (hasBarleyKoji) {
-      return '/img/satsuma-mugi.jpg';
-    }
+  // 完成予定日を計算
+  const getCompletionInfo = () => {
+    if (!hasMaterials) return null;
 
-    return '/img/kaga.jpg';
+    const days = specs.materialPeriod;
+    const completionDate = new Date();
+    completionDate.setDate(completionDate.getDate() + days);
+
+    const year = completionDate.getFullYear();
+    const month = completionDate.getMonth() + 1;
+
+    return { days, year, month };
   };
 
-  const getMisoInfo = () => {
-    const kojiMaterials = selectedMaterials.filter((material) => material.category === 'koji');
-    const hasRiceKoji = kojiMaterials.some((material) => material.id === 'rice-koji');
-    const hasBarleyKoji = kojiMaterials.some((material) => material.id === 'barley-koji');
-
-    if (hasRiceKoji && hasBarleyKoji) {
-      return {
-        name: '九州合わせ味噌',
-        period: 1,
-      };
-    } else if (hasRiceKoji) {
-      return {
-        name: '加賀味噌',
-        period: 6,
-      };
-    } else if (hasBarleyKoji) {
-      return {
-        name: '薩摩麦味噌',
-        period: 2,
-      };
-    }
-
-    return null;
-  };
-
-  const info = getMisoInfo();
-  const messageInfo = getMessageInfo(selectedMaterials);
+  const completionInfo = getCompletionInfo();
 
   return (
-    <div className="w-full flex gap-8 mx-auto bg-white rounded-lg shadow-md p-8">
+    <div className="w-full flex items-center flex-col-reverse sm:flex-row sm:gap-8 gap-4 mx-auto bg-white md:rounded-lg shadow-md p-8 w-max-[320px]">
       <div className="relative w-[180px] h-[180px] rounded-lg overflow-hidden shadow-lg flex-shrink-0">
         <Image
-          src={hasMaterials && info ? getImageSrc() : '/img/kyushu-awase.jpg'}
-          alt={hasMaterials && info ? info.name : '味噌のイメージ'}
+          src={hasMaterials && misoInfo ? misoInfo.image : '/img/kyushu-awase.jpg'}
+          alt={hasMaterials && misoInfo ? misoInfo.name : '味噌のイメージ'}
           fill
           className="object-cover"
         />
-        {(!hasMaterials || !info) && <div className="absolute inset-0 bg-white/70"></div>}
+        {(!hasMaterials || !misoInfo) && <div className="absolute inset-0 bg-white/70"></div>}
       </div>
-      <div className="flex flex-col gap-4 w-full min-h-[200px]">
+      <div className="flex flex-col gap-4 w-full min-h-[200px] items-center">
         {/* メインの説明文 */}
         <div className="min-h-[60px]">
           <AnimatePresence mode="wait">
@@ -138,7 +101,7 @@ export default function Deliverables({
               <SlideInText
                 key="warning"
                 direction="left"
-                className="text-lg text-ferment-dark leading-relaxed"
+                className="text-ferment-dark leading-relaxed"
               >
                 <span className="text-red-700">⚠️ {messageInfo.message}</span>
               </SlideInText>
@@ -146,24 +109,33 @@ export default function Deliverables({
               <SlideInText
                 key="info"
                 direction="left"
-                className="text-lg text-ferment-dark leading-relaxed"
+                className="text-ferment-dark leading-relaxed"
               >
                 <span className="text-blue-700">ℹ️ {messageInfo.message}</span>
               </SlideInText>
-            ) : hasMaterials && info ? (
+            ) : hasMaterials ? (
               <SlideInText
                 key="result"
                 direction="left"
                 className="text-lg text-ferment-dark leading-relaxed"
               >
-                この組み合わせは
                 <span className="font-bold text-xl text-ferment-primary mx-1">
-                  今から4ヶ月（2025年12月）ごろ
+                  {completionInfo
+                    ? `${completionInfo.days}日後（${completionInfo.year}年${completionInfo.month}月）ぐらい`
+                    : '4ヶ月後（2025年12月）ぐらい'}
                 </span>
                 に
                 <br />
-                <span className="font-bold text-ferment-primary text-xl mx-1">薩摩麦味噌</span>
-                と似た成分の味噌ができあがります
+                {misoInfo ? (
+                  <>
+                    <span className="font-bold text-ferment-primary text-xl mx-1">
+                      {misoInfo.name}
+                    </span>
+                    に似た味噌ができます
+                  </>
+                ) : (
+                  <>この成分の味噌ができあがります</>
+                )}
               </SlideInText>
             ) : null}
           </AnimatePresence>

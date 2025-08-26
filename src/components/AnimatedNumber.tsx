@@ -13,8 +13,9 @@ export default function AnimatedNumber({
   suffix = '',
   duration = 800 
 }: AnimatedNumberProps) {
-  const [displayValue, setDisplayValue] = useState<number>(0);
-  const prevValue = useRef<number>(0);
+  const numericValue = typeof value === 'string' ? parseFloat(value) || 0 : value;
+  const [displayValue, setDisplayValue] = useState<number>(numericValue);
+  const prevValue = useRef<number>(numericValue);
   const animationRef = useRef<number>();
 
   useEffect(() => {
