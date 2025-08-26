@@ -23,7 +23,7 @@ export const SOYBEAN: Material = {
     primary: '#f8cc99',
     light: '#fce8d1',
     background: '#f8cc99',
-    border: '#e6b17a',
+    border: '#c49660',
   },
   shopifyVariantId: '45123752296604',
 };

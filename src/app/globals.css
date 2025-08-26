@@ -1,10 +1,9 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-
   /* 発酵テーマカラー */
   --ferment-primary: #8b4513;
   --ferment-secondary: #a0522d;
@@ -18,7 +17,7 @@
   --koji-primary: #9acd32;
   --koji-light: #adff2f;
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: #faf9f8;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -107,116 +106,6 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-}
-
-@keyframes organic-pulse {
-  0%,
-  100% {
-    transform: scale(1) rotate(0deg);
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  }
-  50% {
-    transform: scale(1.05) rotate(2deg);
-    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes wobble {
-  0%,
-  100% {
-    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  }
-  33% {
-    border-radius: 70% 30% 50% 50% / 30% 60% 70% 40%;
-  }
-  66% {
-    border-radius: 40% 60% 70% 30% / 50% 40% 30% 60%;
-  }
-}
-
-/* ダークモードを無効化してライトモードに固定
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #2D1B12;
-    --foreground: #F5E6D3;
-  }
-}
-*/
-
-body {
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* コンテナのレスポンシブ調整 */
-.container {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (min-width: 640px) {
-  .container {
-    max-width: 640px;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 768px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .container {
-    max-width: 1024px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .container {
-    max-width: 1280px;
-  }
-}
-
-@media (min-width: 1536px) {
-  .container {
-    max-width: 1536px;
-  }
-}
-
-/* スマホ向けの調整 */
-@media (max-width: 768px) {
-  .text-4xl {
-    font-size: 2.5rem;
-  }
-
-  .text-6xl {
-    font-size: 3rem;
-  }
-
-  .grid-cols-3 {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-
-  .lg\:col-span-1 {
-    grid-column: span 1 / span 1;
-  }
 }
 
 .dark {

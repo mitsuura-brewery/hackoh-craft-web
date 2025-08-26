@@ -23,7 +23,7 @@ export const RICE_KOJI: Material = {
     primary: '#d0e4e8',
     light: '#e8f4f6',
     background: '#d0e4e8',
-    border: '#b8d1d6',
+    border: '#8bb3ba',
   },
   shopifyVariantId: '45123754885276',
 };

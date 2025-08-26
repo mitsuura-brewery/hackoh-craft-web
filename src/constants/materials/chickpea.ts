@@ -23,7 +23,7 @@ export const CHICKPEA: Material = {
     primary: '#f4e654',
     light: '#f9f19e',
     background: '#f4e654',
-    border: '#e0cf2a',
+    border: '#c4b320',
   },
   shopifyVariantId: '45123753115804',
 };

@@ -106,7 +106,7 @@ function MaterialIconButton({
   const handleIconClick = () => {
     // 15個の制限をチェック
     if (selectedMaterials.length >= 15) return;
-    
+
     setIsPressed(true);
     onAdd();
     setTimeout(() => setIsPressed(false), 150);
@@ -124,24 +124,19 @@ function MaterialIconButton({
       case 'full':
         return {
           size: 'w-20 h-20',
-          iconSize: 'text-3xl',
           showInfo: true,
-          showName: true,
         };
-      case 'medium':
-        return {
-          size: 'w-16 h-16',
-          iconSize: 'text-2xl',
-          showInfo: true,
-          showName: false,
-        };
+      // case 'medium':
       default:
         return {
-          size: 'w-14 h-14',
-          iconSize: 'text-xl',
-          showInfo: false,
-          showName: false,
+          size: 'w-18 h-18',
+          showInfo: true,
         };
+      // default:
+      //   return {
+      //     size: 'w-14 h-14',
+      //     showInfo: false,
+      //   };
     }
   };
 
@@ -164,30 +159,29 @@ function MaterialIconButton({
           className={cn(
             config.size,
             'rounded-full border-2 shadow-lg flex flex-col items-center justify-center transition-all duration-200 backdrop-blur-sm',
-            config.iconSize,
             isPressed && 'opacity-80',
-            isDisabled ? 'opacity-40 cursor-not-allowed' : 'hover:scale-105 cursor-pointer'
+            isDisabled ? 'opacity-40 cursor-not-allowed' : 'hover:scale-105 cursor-pointer',
           )}
-          style={{
-            '--material-bg': materialColor.backgroundColor,
-            '--material-border': materialColor.borderColor,
-            backgroundColor: 'var(--material-bg)',
-            borderColor: 'var(--material-border)',
-          } as React.CSSProperties}
+          style={
+            {
+              '--material-bg': materialColor.backgroundColor,
+              '--material-border': materialColor.borderColor,
+              backgroundColor: 'var(--material-bg)',
+              borderColor: 'var(--material-border)',
+            } as React.CSSProperties
+          }
           title={isDisabled ? '材料の上限に達しました（15個まで）' : `${material.name}を追加`}
         >
           <Image
             src={material.icon}
             alt={material.shortName}
-            width={24}
-            height={24}
+            width={32}
+            height={32}
             className="object-contain"
           />
-          {config.showName && (
-            <span className="text-xs font-medium mt-1 text-center leading-tight">
-              {material.shortName}
-            </span>
-          )}
+          <span className="text-xs font-medium mt-1 text-center leading-tight">
+            {material.shortName}
+          </span>
         </motion.button>
 
         {/* 数量表示 */}
@@ -199,12 +193,14 @@ function MaterialIconButton({
               exit={{ scale: 0 }}
               className={cn(
                 'absolute top-0 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold',
-                side === 'left' ? 'right-0' : 'left-0'
+                side === 'left' ? 'right-0' : 'left-0',
               )}
-              style={{
-                '--material-primary': materialColor.primaryColor,
-                backgroundColor: 'var(--material-primary)',
-              } as React.CSSProperties}
+              style={
+                {
+                  '--material-primary': materialColor.borderColor,
+                  backgroundColor: 'var(--material-primary)',
+                } as React.CSSProperties
+              }
             >
               {count}
             </motion.div>
@@ -220,16 +216,18 @@ function MaterialIconButton({
           className={cn(
             'absolute top-1/2 -translate-y-1/2 z-10 px-3 py-2 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-ferment-light/50 whitespace-nowrap pointer-events-none',
             side === 'left' ? 'left-full ml-4' : 'right-full mr-4',
-            displayMode === 'full' ? 'min-w-[200px]' : 'min-w-[160px]'
+            displayMode === 'full' ? 'min-w-[200px]' : 'min-w-[160px]',
           )}
         >
           <div className="text-sm">
-            <p 
+            <p
               className="font-semibold mb-1"
-              style={{
-                '--material-primary': materialColor.primaryColor,
-                color: 'var(--material-primary)',
-              } as React.CSSProperties}
+              style={
+                {
+                  '--material-primary': materialColor.primaryColor,
+                  color: 'var(--material-primary)',
+                } as React.CSSProperties
+              }
             >
               {material.name}
             </p>
@@ -265,7 +263,7 @@ function MaterialIconButton({
           whileHover={{ opacity: 1 }}
           className={cn(
             'absolute top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 text-white text-xs rounded-lg whitespace-nowrap pointer-events-none',
-            side === 'left' ? 'left-full ml-2' : 'right-full mr-2'
+            side === 'left' ? 'left-full ml-2' : 'right-full mr-2',
           )}
         >
           {material.shortName}

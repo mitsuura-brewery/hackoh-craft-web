@@ -83,7 +83,7 @@ export default function Deliverables({
   const completionInfo = getCompletionInfo();
 
   return (
-    <div className="w-full flex items-center flex-col-reverse sm:flex-row sm:gap-8 gap-4 mx-auto bg-white md:rounded-lg shadow-md p-8 w-max-[320px]">
+    <div className="w-full flex items-center flex-col-reverse sm:flex-row sm:gap-8 gap-4 mx-auto bg-white md:rounded-lg shadow-md py-8 px-4 sm:p-8 w-max-[320px]">
       <div className="relative w-[180px] h-[180px] rounded-lg overflow-hidden shadow-lg flex-shrink-0">
         <Image
           src={hasMaterials && misoInfo ? misoInfo.image : './img/kyushu-awase.jpg'}
@@ -193,93 +193,38 @@ export default function Deliverables({
 
         {/* 仕様一覧 */}
         <div className="mb-6">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <p className="text-sm text-ferment-secondary mb-1">麹歩合</p>
-              <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials ? <AnimatedNumber value={specs.kojiRatio} /> : '-'}
-              </p>
-            </motion.div>
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <p className="text-sm text-ferment-secondary mb-1">加水量</p>
-              <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials ? (
-                  <>
-                    <AnimatedNumber value={specs.waterAmount} />
-                    <span className="text-sm text-ferment-secondary">ml</span>
-                  </>
-                ) : (
-                  '-'
-                )}
-              </p>
-            </motion.div>
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <p className="text-sm text-ferment-secondary mb-1">塩分</p>
-              <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials ? (
-                  <>
-                    <AnimatedNumber value={specs.saltRatio} />
-                    <span className="text-sm text-ferment-secondary">%</span>
-                  </>
-                ) : (
-                  '-'
-                )}
-              </p>
-            </motion.div>
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <p className="text-sm text-ferment-secondary mb-1">重量</p>
-              <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials ? (
-                  <>
-                    <AnimatedNumber value={specs.totalWeight} />
-                    <span className="text-sm text-ferment-secondary">g</span>
-                  </>
-                ) : (
-                  '-'
-                )}
-              </p>
-            </motion.div>
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <p className="text-sm text-ferment-secondary mb-1">期間目安</p>
-              <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials ? (
-                  <>
-                    <AnimatedNumber value={specs.materialPeriod} />
-                    <span className="text-sm text-ferment-secondary">日</span>
-                  </>
-                ) : (
-                  '-'
-                )}
-              </p>
-            </motion.div>
+          <div className="flex flex-wrap w-full gap-4 sm:gap-8 justify-between">
+            {renderSpec(hasMaterials, '麹歩合', specs.kojiRatio, '', 0.1)}
+            {renderSpec(hasMaterials, '加水量', specs.waterAmount, 'ml', 0.2)}
+            {renderSpec(hasMaterials, '塩分', specs.saltRatio, '%', 0.3)}
+            {renderSpec(hasMaterials, '重量', specs.totalWeight, 'g', 0.4)}
+            {renderSpec(hasMaterials, '期間目安', specs.materialPeriod, '日', 0.5)}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+const renderSpec = (enable: boolean, label: string, value: number, unit: string, delay: number) => {
+  return (
+    <motion.div
+      className="text-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+    >
+      <p className="text-sm text-ferment-secondary mb-1">{label}</p>
+      <p className="text-xl font-bold text-ferment-dark">
+        {enable ? (
+          <>
+            <AnimatedNumber value={value} />
+            <span className="text-sm text-ferment-secondary">{unit}</span>
+          </>
+        ) : (
+          '-'
+        )}
+      </p>
+    </motion.div>
+  );
+};

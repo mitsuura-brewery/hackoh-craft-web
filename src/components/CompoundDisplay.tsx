@@ -118,7 +118,7 @@ export default function CompoundDisplay({
   return (
     <animated.div
       style={containerSpring}
-      className="relative min-h-[300px] sm:min-h-[400px] flex flex-col items-center justify-center w-full mx-auto"
+      className="relative min-h-[300px] sm:min-h-[400px] flex flex-col items-center justify-center w-4/5 md:w-9/10 mx-auto"
     >
       <div className="relative flex-1 flex items-center justify-center w-full">
         {/* オーガニック境界線のキャンバス */}
@@ -155,7 +155,7 @@ export default function CompoundDisplay({
               } else if (index < 5) {
                 // 最初の5個：内殻（現在の計算方式）
                 const materialsInInnerShell = Math.min(5, selectedMaterials.length);
-                const baseRadius = Math.min(dimensions.width, dimensions.height) * 0.08;
+                const baseRadius = Math.min(dimensions.width, dimensions.height) * 0.1;
 
                 angle = (index / materialsInInnerShell) * Math.PI * 2;
                 radius = baseRadius;
@@ -163,7 +163,7 @@ export default function CompoundDisplay({
                 // 6個目以降：外殻（固定半径で10個まで）
                 const positionInOuterShell = index - 5; // 0-9の位置
                 const materialsInOuterShell = selectedMaterials.length - 5; // 外殻の材料数
-                const outerRadius = Math.min(dimensions.width, dimensions.height) * 0.18; // 固定半径
+                const outerRadius = Math.min(dimensions.width, dimensions.height) * 0.22; // 固定半径
 
                 angle = (positionInOuterShell / materialsInOuterShell) * Math.PI * 2;
                 radius = outerRadius;
@@ -221,16 +221,6 @@ export default function CompoundDisplay({
               animate={{ opacity: 1 }}
               className="absolute inset-0 flex flex-col items-center justify-center text-ferment-secondary/60"
             >
-              {/* <motion.div
-                animate={{
-                  scale: [1, 1.1, 1],
-                  rotate: [0, 5, -5, 0],
-                }}
-                transition={{ duration: 4, repeat: Infinity }}
-                className="text-6xl mb-4"
-              >
-                🧪
-              </motion.div> */}
               <p className="text-center">
                 左右のアイコンで
                 <br />
@@ -257,6 +247,7 @@ export default function CompoundDisplay({
           className="absolute top-0 left-1/2 -translate-x-1/2"
         >
           <Select
+            value=""
             onValueChange={(value) => {
               if (value === 'kaga') {
                 onReplaceMaterials([SOYBEAN, RICE_KOJI]);
@@ -264,7 +255,7 @@ export default function CompoundDisplay({
             }}
           >
             <SelectTrigger className="w-[180px] h-8 text-xs">
-              <SelectValue placeholder="ご当地味噌テンプレート" />
+              <SelectValue placeholder="ご当地味噌の組み合わせ" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="kaga">加賀味噌</SelectItem>
@@ -281,12 +272,7 @@ export default function CompoundDisplay({
           exit={{ opacity: 0, y: 10 }}
           className="absolute bottom-0 left-1/2 -translate-x-1/2"
         >
-          <Button
-            onClick={onReset}
-            variant="outline"
-            size="sm"
-            className="h-8 text-xs"
-          >
+          <Button onClick={onReset} variant="outline" size="sm" className="h-8 text-xs">
             リセット
           </Button>
         </motion.div>
