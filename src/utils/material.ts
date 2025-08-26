@@ -84,13 +84,13 @@ export function calculateMaterialSpecs(
   const proteinMaterials = selectedMaterials.filter(m => m.category === 'protein');
   const kojiMaterials = selectedMaterials.filter(m => m.category === 'koji');
 
-  // タンパク質と麹の重量計算
-  const totalProteinWeight = proteinMaterials.reduce((sum, m) => sum + m.parameters.weight, 0);
-  const totalKojiWeight = kojiMaterials.reduce((sum, m) => sum + m.parameters.weight, 0);
+  // タンパク質と麹の個数計算
+  const proteinCount = proteinMaterials.length;
+  const kojiCount = kojiMaterials.length;
 
-  // 麹歩合：タンパク質と麹が1:1で10とする
-  const kojiRatio = totalKojiWeight > 0 && totalProteinWeight > 0 
-    ? Math.round((totalKojiWeight / totalProteinWeight) * 10) 
+  // 麹歩合：タンパク質と麹が1:1で10とする（個数比ベース）
+  const kojiRatio = kojiCount > 0 && proteinCount > 0 
+    ? Math.round((kojiCount / proteinCount) * 10) 
     : 0;
 
   // 総重量
@@ -105,37 +105,45 @@ export function calculateMaterialSpecs(
   if (kojiRatio > 10) {
     const targetMoistureRatio = 44;
     if (moistureRatio < targetMoistureRatio) {
-      const neededWater = (totalWeight * targetMoistureRatio / 100) - totalMoistureAmount;
+      // 正しい計算式：(目標水分率 × 元重量 - 元水分量) / (1 - 目標水分率)
+      const neededWater = (targetMoistureRatio / 100 * totalWeight - totalMoistureAmount) / (1 - targetMoistureRatio / 100);
       waterAmount = Math.ceil(neededWater / 10) * 10;
     }
   }
 
-  // 塩分計算
+  // 加水量を考慮した総重量と水分量の再計算
+  const finalTotalWeight = totalWeight + waterAmount;
+  const finalTotalMoistureAmount = totalMoistureAmount + waterAmount; // 水は100%水分
+  const finalMoistureRatio = finalTotalWeight > 0 ? (finalTotalMoistureAmount / finalTotalWeight) * 100 : 0;
+
+  // 塩分計算（加水量を考慮した総重量で計算）
   const totalSaltAmount = selectedMaterials.reduce((sum, m) => sum + m.parameters.saltAmount, 0);
-  const saltRatio = totalWeight > 0 ? (totalSaltAmount / totalWeight) * 100 : 0;
+  const saltRatio = finalTotalWeight > 0 ? (totalSaltAmount / finalTotalWeight) * 100 : 0;
 
-  // 期間目安計算
-  const averageTemperature = REGIONAL_TEMPERATURES[region]?.[month] || 20;
-  let baseMaterialPeriod = 120; // ベース期間
+  // 期間目安計算：900日を麹歩合で割った日数
+  const materialPeriod = kojiRatio > 0 ? Math.round(900 / kojiRatio) : 0;
 
-  // 温度による調整：20度を基準に、暖かければ短く、寒ければ長く
-  if (averageTemperature > 20) {
-    const temperatureDifference = averageTemperature - 20;
-    baseMaterialPeriod = Math.max(60, baseMaterialPeriod - (temperatureDifference * 3));
-  } else if (averageTemperature < 20) {
-    const temperatureDifference = 20 - averageTemperature;
-    baseMaterialPeriod = Math.min(180, baseMaterialPeriod + (temperatureDifference * 2));
-  }
-
-  const materialPeriod = Math.round(baseMaterialPeriod);
+  // TODO: 地域と月による温度調整を追加予定
+  // const averageTemperature = REGIONAL_TEMPERATURES[region]?.[month] || 20;
+  // let baseMaterialPeriod = 120; // ベース期間
+  // 
+  // // 温度による調整：20度を基準に、暖かければ短く、寒ければ長く
+  // if (averageTemperature > 20) {
+  //   const temperatureDifference = averageTemperature - 20;
+  //   baseMaterialPeriod = Math.max(60, baseMaterialPeriod - (temperatureDifference * 3));
+  // } else if (averageTemperature < 20) {
+  //   const temperatureDifference = 20 - averageTemperature;
+  //   baseMaterialPeriod = Math.min(180, baseMaterialPeriod + (temperatureDifference * 2));
+  // }
+  // const materialPeriod = Math.round(baseMaterialPeriod);
 
   return {
     kojiRatio,
     waterAmount,
     saltRatio: Math.round(saltRatio * 10) / 10, // 小数点第1位まで
-    totalWeight,
+    totalWeight: finalTotalWeight, // 加水量を含む総重量
     materialPeriod,
-    moistureRatio: Math.round(moistureRatio * 10) / 10 // 小数点第1位まで
+    moistureRatio: Math.round(finalMoistureRatio * 10) / 10 // 加水量を含む水分率
   };
 }
 

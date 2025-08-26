@@ -230,7 +230,7 @@ export default function Deliverables({
             >
               <p className="text-sm text-ferment-secondary mb-1">麹歩合</p>
               <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials && specs.kojiRatio ? <AnimatedNumber value={specs.kojiRatio} /> : '-'}
+                {hasMaterials ? <AnimatedNumber value={specs.kojiRatio} /> : '-'}
               </p>
             </motion.div>
             <motion.div
@@ -241,7 +241,7 @@ export default function Deliverables({
             >
               <p className="text-sm text-ferment-secondary mb-1">加水量</p>
               <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials && specs.waterAmount ? (
+                {hasMaterials ? (
                   <>
                     <AnimatedNumber value={specs.waterAmount} />
                     <span className="text-sm text-ferment-secondary">ml</span>
@@ -259,7 +259,7 @@ export default function Deliverables({
             >
               <p className="text-sm text-ferment-secondary mb-1">塩分</p>
               <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials && specs.saltRatio ? (
+                {hasMaterials ? (
                   <>
                     <AnimatedNumber value={specs.saltRatio} />
                     <span className="text-sm text-ferment-secondary">%</span>
@@ -277,7 +277,7 @@ export default function Deliverables({
             >
               <p className="text-sm text-ferment-secondary mb-1">重量</p>
               <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials && specs.totalWeight ? (
+                {hasMaterials ? (
                   <>
                     <AnimatedNumber value={specs.totalWeight} />
                     <span className="text-sm text-ferment-secondary">g</span>
@@ -295,7 +295,7 @@ export default function Deliverables({
             >
               <p className="text-sm text-ferment-secondary mb-1">期間目安</p>
               <p className="text-xl font-bold text-ferment-dark">
-                {hasMaterials && specs.materialPeriod ? (
+                {hasMaterials ? (
                   <>
                     <AnimatedNumber value={specs.materialPeriod} />
                     <span className="text-sm text-ferment-secondary">日</span>
