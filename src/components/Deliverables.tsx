@@ -24,7 +24,7 @@ export default function Deliverables({
   // メッセージとアイコンを判定する関数
   const getMessageInfo = (
     materials: Material[],
-    specs: MaterialSpecs,
+    // specs: MaterialSpecs,
   ): { message: string; type: 'info' | 'warning' } => {
     if (materials.length === 0) {
       return {
@@ -64,7 +64,7 @@ export default function Deliverables({
   };
 
   const misoInfo = getSimilarMisoInfo(selectedMaterials, specs);
-  const messageInfo = getMessageInfo(selectedMaterials, specs);
+  const messageInfo = getMessageInfo(selectedMaterials);
 
   // 完成予定日を計算
   const getCompletionInfo = () => {

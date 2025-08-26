@@ -114,7 +114,7 @@ describe('getSimilarMisoInfo', () => {
     {
       name: '加賀味噌 - 麹歩合境界値（上限）',
       materials: materials(1, 0, 1, 0), // 大豆、米麹のみ
-      specs: createSpecs(15, 12.3), // kojiRatio=15 (10+5)
+      specs: createSpecs(13, 12.3), // kojiRatio=13 (10+3)
       expected: {
         name: '加賀味噌',
         period: 6,
@@ -128,7 +128,7 @@ describe('getSimilarMisoInfo', () => {
     {
       name: '加賀味噌 - 麹歩合境界値（下限）',
       materials: materials(1, 0, 1, 0), // 大豆、米麹のみ
-      specs: createSpecs(5, 12.3), // kojiRatio=5 (10-5)
+      specs: createSpecs(7, 12.3), // kojiRatio=7 (10-3)
       expected: {
         name: '加賀味噌',
         period: 6,
@@ -170,9 +170,9 @@ describe('getSimilarMisoInfo', () => {
       expected: null,
     },
     {
-      name: '複数材料の組み合わせ（大豆2個、米麹1個）',
-      materials: materials(2, 0, 1, 0), // 大豆2個、米麹1個
-      specs: createSpecs(5, 13.2), // 実際の計算結果に基づく
+      name: '複数材料の組み合わせ（大豆2個、米麹2個）',
+      materials: materials(2, 0, 2, 0), // 大豆2個、米麹2個
+      specs: createSpecs(10, 11.3), // 実際の計算結果に基づく
       expected: {
         name: '加賀味噌',
         period: 6,
