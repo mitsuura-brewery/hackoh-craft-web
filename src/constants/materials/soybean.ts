@@ -5,7 +5,7 @@ export const SOYBEAN: Material = {
   name: '大豆',
   shortName: '大豆',
   category: 'protein',
-  icon: '/img/soy.png',
+  icon: './img/soy.png',
   thumbnail: '/materials/soybean.jpg',
   description: '大豆を使用した発酵素材',
   parameters: {

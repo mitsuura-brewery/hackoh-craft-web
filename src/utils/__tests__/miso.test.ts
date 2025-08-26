@@ -3,6 +3,7 @@ import { getSimilarMisoInfo, MisoInfo } from '../miso';
 import { MaterialSpecs } from '../material';
 import { Material } from '@/types/material';
 import { SOYBEAN, RICE_KOJI, BARLEY_KOJI, CHICKPEA } from '@/constants/materials';
+import { KAGA, KYUSHU_AWASE, SATSUMA_MUGI } from '@/constants/misos';
 
 interface TestCase {
   name: string;
@@ -45,99 +46,43 @@ describe('getSimilarMisoInfo', () => {
       name: '九州合わせ味噌 - 完全一致',
       materials: materials(1, 0, 1, 1), // 大豆、米麹、麦麹
       specs: createSpecs(25, 11.5), // kojiRatio=25, saltRatio=11.5%
-      expected: {
-        name: '九州合わせ味噌',
-        period: 1,
-        image: '/img/kyushu-awase.jpg',
-        saltRange: 11.5,
-        proteins: ['大豆'],
-        kojiRatio: 25,
-        kojiRequire: ['米麹', '麦麹'],
-      },
+      expected: KYUSHU_AWASE,
     },
     {
       name: '加賀味噌 - 完全一致',
       materials: materials(1, 0, 1, 0), // 大豆、米麹のみ
       specs: createSpecs(10, 12.3), // kojiRatio=10, saltRatio=12.3%
-      expected: {
-        name: '加賀味噌',
-        period: 6,
-        image: '/img/kaga.jpg',
-        saltRange: 12.3,
-        proteins: ['大豆'],
-        kojiRatio: 10,
-        kojiRequire: ['米麹'],
-      },
+      expected: KAGA,
     },
     {
       name: '薩摩麦味噌 - 完全一致',
       materials: materials(1, 0, 0, 1), // 大豆、麦麹のみ
       specs: createSpecs(25, 10.7), // kojiRatio=25, saltRatio=10.7%
-      expected: {
-        name: '薩摩麦味噌',
-        period: 2,
-        image: '/img/satsuma-mugi.jpg',
-        saltRange: 10.7,
-        proteins: ['大豆'],
-        kojiRatio: 25,
-        kojiRequire: ['麦麹'],
-      },
+      expected: SATSUMA_MUGI,
     },
     {
       name: '九州合わせ味噌 - 塩分境界値（上限）',
       materials: materials(1, 0, 1, 1), // 大豆、米麹、麦麹
       specs: createSpecs(25, 12.5), // saltRatio=12.5% (11.5+1.0)
-      expected: {
-        name: '九州合わせ味噌',
-        period: 1,
-        image: '/img/kyushu-awase.jpg',
-        saltRange: 11.5,
-        proteins: ['大豆'],
-        kojiRatio: 25,
-        kojiRequire: ['米麹', '麦麹'],
-      },
+      expected: KYUSHU_AWASE,
     },
     {
       name: '九州合わせ味噌 - 塩分境界値（下限）',
       materials: materials(1, 0, 1, 1), // 大豆、米麹、麦麹
       specs: createSpecs(25, 10.5), // saltRatio=10.5% (11.5-1.0)
-      expected: {
-        name: '九州合わせ味噌',
-        period: 1,
-        image: '/img/kyushu-awase.jpg',
-        saltRange: 11.5,
-        proteins: ['大豆'],
-        kojiRatio: 25,
-        kojiRequire: ['米麹', '麦麹'],
-      },
+      expected: KYUSHU_AWASE,
     },
     {
       name: '加賀味噌 - 麹歩合境界値（上限）',
       materials: materials(1, 0, 1, 0), // 大豆、米麹のみ
       specs: createSpecs(13, 12.3), // kojiRatio=13 (10+3)
-      expected: {
-        name: '加賀味噌',
-        period: 6,
-        image: '/img/kaga.jpg',
-        saltRange: 12.3,
-        proteins: ['大豆'],
-        kojiRatio: 10,
-        kojiRequire: ['米麹'],
-      },
+      expected: KAGA,
     },
     {
       name: '加賀味噌 - 麹歩合境界値（下限）',
       materials: materials(1, 0, 1, 0), // 大豆、米麹のみ
       specs: createSpecs(7, 12.3), // kojiRatio=7 (10-3)
-      expected: {
-        name: '加賀味噌',
-        period: 6,
-        image: '/img/kaga.jpg',
-        saltRange: 12.3,
-        proteins: ['大豆'],
-        kojiRatio: 10,
-        kojiRequire: ['米麹'],
-      },
+      expected: KAGA,
     },
     {
       name: '材料なし',
@@ -173,15 +118,7 @@ describe('getSimilarMisoInfo', () => {
       name: '複数材料の組み合わせ（大豆2個、米麹2個）',
       materials: materials(2, 0, 2, 0), // 大豆2個、米麹2個
       specs: createSpecs(10, 11.3), // 実際の計算結果に基づく
-      expected: {
-        name: '加賀味噌',
-        period: 6,
-        image: '/img/kaga.jpg',
-        saltRange: 12.3,
-        proteins: ['大豆'],
-        kojiRatio: 10,
-        kojiRequire: ['米麹'],
-      },
+      expected: KAGA,
     },
   ];
 

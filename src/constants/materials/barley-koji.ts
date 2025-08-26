@@ -5,7 +5,7 @@ export const BARLEY_KOJI: Material = {
   name: '麦麹',
   shortName: '麦麹',
   category: 'koji',
-  icon: '/img/wheat.png',
+  icon: './img/wheat.png',
   thumbnail: '/materials/barley-koji.jpg',
   description: '麦を麹菌で発酵させた発酵触媒',
   parameters: {

@@ -5,7 +5,7 @@ export const RICE_KOJI: Material = {
   name: '米麹',
   shortName: '米麹',
   category: 'koji',
-  icon: '/img/rice.png',
+  icon: './img/rice.png',
   thumbnail: '/materials/rice-koji.jpg',
   description: '米を麹菌で発酵させた発酵触媒',
   parameters: {

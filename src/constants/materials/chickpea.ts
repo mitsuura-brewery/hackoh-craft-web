@@ -5,7 +5,7 @@ export const CHICKPEA: Material = {
   name: 'ひよこ豆',
   shortName: 'ひよこ豆',
   category: 'protein',
-  icon: '/img/chickpeas.png',
+  icon: './img/chickpeas.png',
   thumbnail: '/materials/chickpea.jpg',
   description: 'ひよこ豆を使用した発酵素材',
   parameters: {

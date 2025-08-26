@@ -86,7 +86,7 @@ export default function Deliverables({
     <div className="w-full flex items-center flex-col-reverse sm:flex-row sm:gap-8 gap-4 mx-auto bg-white md:rounded-lg shadow-md p-8 w-max-[320px]">
       <div className="relative w-[180px] h-[180px] rounded-lg overflow-hidden shadow-lg flex-shrink-0">
         <Image
-          src={hasMaterials && misoInfo ? misoInfo.image : '/img/kyushu-awase.jpg'}
+          src={hasMaterials && misoInfo ? misoInfo.image : './img/kyushu-awase.jpg'}
           alt={hasMaterials && misoInfo ? misoInfo.name : '味噌のイメージ'}
           fill
           className="object-cover"
