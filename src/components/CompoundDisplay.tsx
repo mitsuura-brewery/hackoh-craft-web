@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import rough from 'roughjs';
 import IntegratedMaterialIcons from './IntegratedMaterialIcons';
 import Image from 'next/image';
+import { SOYBEAN, RICE_KOJI } from '@/constants/materials';
 
 interface CompoundDisplayProps {
   selectedMaterials: Material[];
@@ -15,6 +16,7 @@ interface CompoundDisplayProps {
   materials: Material[];
   onMaterialAdd: (material: Material) => void;
   onReset?: () => void;
+  onReplaceMaterials?: (materials: Material[]) => void;
 }
 
 export default function CompoundDisplay({
@@ -23,6 +25,7 @@ export default function CompoundDisplay({
   materials,
   onMaterialAdd,
   onReset,
+  onReplaceMaterials,
 }: CompoundDisplayProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions, setDimensions] = useState({ width: 375, height: 300 });
@@ -236,6 +239,32 @@ export default function CompoundDisplay({
           onMaterialAdd={onMaterialAdd}
         />
       </div>
+
+      {/* ご当地味噌テンプレート */}
+      {onReplaceMaterials && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="absolute top-0 left-1/2 -translate-x-1/2"
+        >
+          <select
+            onChange={(e) => {
+              if (e.target.value === 'kaga') {
+                onReplaceMaterials([SOYBEAN, RICE_KOJI]);
+                e.target.value = ''; // リセット
+              }
+            }}
+            className="px-3 py-1 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 hover:border-gray-400 rounded-md bg-white hover:bg-gray-50 transition-all duration-200"
+            defaultValue=""
+          >
+            <option value="" disabled>
+              ご当地味噌テンプレート
+            </option>
+            <option value="kaga">加賀味噌</option>
+          </select>
+        </motion.div>
+      )}
 
       {/* リセットボタン */}
       {selectedMaterials.length > 0 && onReset && (

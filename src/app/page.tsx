@@ -38,6 +38,10 @@ export default function MaterialLab() {
     setSelectedMaterials([]);
   };
 
+  const handleReplaceMaterials = (materials: Material[]) => {
+    setSelectedMaterials(materials);
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <div className="py-8 flex flex-col gap-y-8 md:gap-y-12 items-center">
@@ -59,6 +63,7 @@ export default function MaterialLab() {
             materials={INITIAL_MATERIALS}
             onMaterialAdd={handleMaterialAdd}
             onReset={handleReset}
+            onReplaceMaterials={handleReplaceMaterials}
           />
 
           {/* 出来上がりシミュレーション */}
