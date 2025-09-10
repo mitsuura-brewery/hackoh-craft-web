@@ -7,8 +7,13 @@ import { useSpring, animated, useTransition } from '@react-spring/web';
 import { useEffect, useRef, useState } from 'react';
 import rough from 'roughjs';
 import IntegratedMaterialIcons from './IntegratedMaterialIcons';
+import SavedCombinationSelect from './SavedCombinationSelect';
+import SaveCombinationDialog from './SaveCombinationDialog';
+import DeleteCombinationDialog from './DeleteCombinationDialog';
 import Image from 'next/image';
 import { SOYBEAN, RICE_KOJI } from '@/constants/materials';
+import { SavedCombination } from '@/types/combination';
+import { getSavedCombinations, findMatchingCombination } from '@/utils/combination';
 import {
   Select,
   SelectContent,
@@ -25,6 +30,8 @@ interface CompoundDisplayProps {
   onMaterialAdd: (material: Material) => void;
   onReset?: () => void;
   onReplaceMaterials?: (materials: Material[]) => void;
+  selectedMonth?: number;
+  selectedRegion?: string;
 }
 
 export default function CompoundDisplay({
@@ -34,9 +41,16 @@ export default function CompoundDisplay({
   onMaterialAdd,
   onReset,
   onReplaceMaterials,
+  selectedMonth = new Date().getMonth() + 1,
+  selectedRegion = '関東',
 }: CompoundDisplayProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions, setDimensions] = useState({ width: 375, height: 300 });
+  const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [matchingCombination, setMatchingCombination] = useState<SavedCombination | null>(null);
+  const [isKagaMisoSelected, setIsKagaMisoSelected] = useState(false);
 
   const containerSpring = useSpring({
     opacity: 1,
@@ -115,10 +129,33 @@ export default function CompoundDisplay({
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
+  // 保存済み組み合わせのチェック
+  useEffect(() => {
+    const combinations = getSavedCombinations();
+
+    if (selectedMaterials.length > 0) {
+      const matching = findMatchingCombination(selectedMaterials, combinations);
+      setMatchingCombination(matching);
+    } else {
+      setMatchingCombination(null);
+    }
+  }, [selectedMaterials, refreshTrigger]);
+
+  // 加賀味噌の組み合わせをチェック
+  useEffect(() => {
+    const kagaMaterials = [SOYBEAN, RICE_KOJI];
+    const isKagaMatch =
+      selectedMaterials.length === kagaMaterials.length &&
+      kagaMaterials.every((material) =>
+        selectedMaterials.some((selected) => selected.id === material.id),
+      );
+    setIsKagaMisoSelected(isKagaMatch);
+  }, [selectedMaterials]);
+
   return (
     <animated.div
       style={containerSpring}
-      className="relative min-h-[300px] sm:min-h-[400px] flex flex-col items-center justify-center w-4/5 md:w-9/10 mx-auto"
+      className="relative min-h-[320px] sm:min-h-[400px] flex flex-col items-center justify-center w-4/5 md:w-9/10 mx-auto"
     >
       <div className="relative flex-1 flex items-center justify-center w-full">
         {/* オーガニック境界線のキャンバス */}
@@ -238,7 +275,7 @@ export default function CompoundDisplay({
         />
       </div>
 
-      {/* ご当地味噌テンプレート */}
+      {/* ご当地味噌テンプレートと保存した組み合わせ */}
       {onReplaceMaterials && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -246,37 +283,93 @@ export default function CompoundDisplay({
           exit={{ opacity: 0, y: -10 }}
           className="absolute top-0 left-1/2 -translate-x-1/2"
         >
-          <Select
-            value=""
-            onValueChange={(value) => {
-              if (value === 'kaga') {
-                onReplaceMaterials([SOYBEAN, RICE_KOJI]);
-              }
-            }}
-          >
-            <SelectTrigger className="w-[180px] h-8 text-xs">
-              <SelectValue placeholder="ご当地味噌の組み合わせ" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="kaga">加賀味噌</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex gap-4 items-center">
+            <Select
+              value={isKagaMisoSelected ? 'kaga' : ''}
+              onValueChange={(value) => {
+                if (value === 'kaga') {
+                  onReplaceMaterials([SOYBEAN, RICE_KOJI]);
+                }
+              }}
+            >
+              <SelectTrigger
+                className={`w-[140px] h-8 text-xs ${isKagaMisoSelected ? 'text-red-600' : ''}`}
+              >
+                <SelectValue placeholder="ご当地味噌" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="kaga">加賀味噌</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <SavedCombinationSelect
+              allMaterials={materials}
+              selectedMaterials={selectedMaterials}
+              onSelect={onReplaceMaterials}
+              refreshTrigger={refreshTrigger}
+            />
+          </div>
         </motion.div>
       )}
 
-      {/* リセットボタン */}
-      {selectedMaterials.length > 0 && onReset && (
+      {/* 保存・削除・リセットボタン */}
+      {selectedMaterials.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           className="absolute bottom-0 left-1/2 -translate-x-1/2"
         >
-          <Button onClick={onReset} variant="outline" size="sm" className="h-8 text-xs">
-            リセット
-          </Button>
+          <div className="flex gap-2">
+            {matchingCombination ? (
+              <Button
+                onClick={() => setIsDeleteDialogOpen(true)}
+                variant="outline"
+                size="sm"
+                className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                削除する
+              </Button>
+            ) : (
+              <Button
+                onClick={() => setIsSaveDialogOpen(true)}
+                variant="outline"
+                size="sm"
+                className="h-8 text-xs"
+              >
+                保存する
+              </Button>
+            )}
+            {onReset && (
+              <Button onClick={onReset} variant="outline" size="sm" className="h-8 text-xs">
+                リセット
+              </Button>
+            )}
+          </div>
         </motion.div>
       )}
+
+      {/* 保存ダイアログ */}
+      <SaveCombinationDialog
+        isOpen={isSaveDialogOpen}
+        onClose={() => setIsSaveDialogOpen(false)}
+        materials={selectedMaterials}
+        selectedMonth={selectedMonth}
+        selectedRegion={selectedRegion}
+        onSave={() => setRefreshTrigger((prev) => prev + 1)}
+      />
+
+      {/* 削除ダイアログ */}
+      <DeleteCombinationDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        combination={matchingCombination}
+        materials={materials}
+        onDelete={() => {
+          setRefreshTrigger((prev) => prev + 1);
+          onReset?.();
+        }}
+      />
     </animated.div>
   );
 }

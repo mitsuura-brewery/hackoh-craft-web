@@ -64,6 +64,8 @@ export default function MaterialLab() {
             onMaterialAdd={handleMaterialAdd}
             onReset={handleReset}
             onReplaceMaterials={handleReplaceMaterials}
+            selectedMonth={selectedMonth}
+            selectedRegion={selectedRegion}
           />
 
           {/* 出来上がりシミュレーション */}
