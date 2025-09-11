@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Material } from '@/types/material';
-import { SOYBEAN, CHICKPEA, RICE_KOJI, BARLEY_KOJI } from '@/constants/materials';
+import { SOYBEAN, CHICKPEA, RICE_KOJI, BARLEY_KOJI, BROWN_RICE_KOJI, WHEAT_KOJI } from '@/constants/materials';
 import CompoundDisplay from '@/components/CompoundDisplay';
 import PurchaseButton from '@/components/PurchaseButton';
 import Deliverables from '@/components/Deliverables';
@@ -13,6 +13,8 @@ const INITIAL_MATERIALS: Material[] = [
   CHICKPEA,
   RICE_KOJI,
   BARLEY_KOJI,
+  BROWN_RICE_KOJI,
+  WHEAT_KOJI,
 ];
 
 export default function MaterialLab() {
