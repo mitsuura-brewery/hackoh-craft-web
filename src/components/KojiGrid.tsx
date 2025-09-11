@@ -2,111 +2,40 @@
 
 import { Material } from '@/types/material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import KojiGrid from './KojiGrid';
-import KojiDialog from './KojiDialog';
 
-interface IntegratedMaterialIconsProps {
-  materials: Material[];
+interface KojiGridProps {
+  kojiMaterials: Material[];
   selectedMaterials: Material[];
   onMaterialAdd: (material: Material) => void;
+  side: 'left' | 'right';
+  displayMode: 'minimal' | 'medium' | 'full';
 }
 
-export default function IntegratedMaterialIcons({
-  materials,
+export default function KojiGrid({
+  kojiMaterials,
   selectedMaterials,
   onMaterialAdd,
-}: IntegratedMaterialIconsProps) {
-  const [screenWidth, setScreenWidth] = useState(0);
-  const [isKojiDialogOpen, setIsKojiDialogOpen] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const proteinMaterials = materials.filter((m) => m.category === 'protein');
-  const kojiMaterials = materials.filter((m) => m.category === 'koji');
-
-  // 画面幅に応じて情報量を決定
-  const getDisplayMode = () => {
-    if (screenWidth >= 1024) return 'full'; // デスクトップ - フル情報
-    if (screenWidth >= 768) return 'medium'; // タブレット - 中程度情報
-    return 'minimal'; // スマホ - 最小情報
-  };
-
-  const displayMode = getDisplayMode();
-  const isMobile = screenWidth > 0 && screenWidth < 768;
-
+  side,
+  displayMode,
+}: KojiGridProps) {
   return (
-    <>
-      {/* タンパク質ペーストアイコン群 - 左側 */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/4 pointer-events-auto z-10">
-        <div className="flex flex-col gap-3">
-          {proteinMaterials.map((material, index) => (
-            <MaterialIconButton
-              key={material.id}
-              material={material}
-              count={selectedMaterials.filter((m) => m.id === material.id).length}
-              onAdd={() => onMaterialAdd(material)}
-              side="left"
-              displayMode={displayMode}
-              delay={index * 0.1}
-              selectedMaterials={selectedMaterials}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* 麹菌アイコン群 - 右側 */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4 pointer-events-auto z-10">
-        {isMobile ? (
-          /* スマホ用: 麹ボタン */
-          <div className="flex flex-col items-center gap-2">
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setIsKojiDialogOpen(true)}
-              className="w-16 h-16 rounded-full border-2 border-ferment-primary bg-ferment-primary/10 backdrop-blur-sm shadow-lg flex flex-col items-center justify-center transition-all duration-200 hover:scale-105"
-              title="麹を選択"
-            >
-              <Image
-                src="/img/aspergillus.png"
-                alt="麹菌"
-                width={32}
-                height={32}
-                className="object-contain"
-              />
-            </motion.button>
-            <span className="text-xs font-medium text-ferment-primary">麹</span>
-          </div>
-        ) : (
-          /* タブレット・PC用: グリッド表示 */
-          <KojiGrid
-            kojiMaterials={kojiMaterials}
-            selectedMaterials={selectedMaterials}
-            onMaterialAdd={onMaterialAdd}
-            side="right"
-            displayMode={displayMode}
-          />
-        )}
-      </div>
-
-      {/* スマホ用麹選択ダイアログ */}
-      <KojiDialog
-        isOpen={isKojiDialogOpen}
-        onClose={() => setIsKojiDialogOpen(false)}
-        kojiMaterials={kojiMaterials}
-        selectedMaterials={selectedMaterials}
-        onMaterialAdd={onMaterialAdd}
-      />
-    </>
+    <div className="flex flex-col gap-3">
+      {kojiMaterials.map((material, index) => (
+        <MaterialIconButton
+          key={material.id}
+          material={material}
+          count={selectedMaterials.filter((m) => m.id === material.id).length}
+          onAdd={() => onMaterialAdd(material)}
+          side={side}
+          displayMode={displayMode}
+          delay={index * 0.1}
+          selectedMaterials={selectedMaterials}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -160,11 +89,6 @@ function MaterialIconButton({
           size: 'w-18 h-18',
           showInfo: true,
         };
-      // default:
-      //   return {
-      //     size: 'w-14 h-14',
-      //     showInfo: false,
-      //   };
     }
   };
 
@@ -262,23 +186,8 @@ function MaterialIconButton({
             <p className="text-xs text-ferment-dark/70 mb-2">{material.description}</p>
             <p className="text-xs text-green-600 mb-1">クリックで追加</p>
             <div className="text-xs text-ferment-secondary/80">
-              {material.category === 'protein' && (
-                <>
-                  <div>タンパク質: {material.parameters.protein}%</div>
-                  {displayMode === 'full' && (
-                    <>
-                      <div>塩分: {material.parameters.salt}%</div>
-                      <div>水分: {material.parameters.moisture}%</div>
-                    </>
-                  )}
-                </>
-              )}
-              {material.category === 'koji' && (
-                <>
-                  <div>でんぷん: {material.parameters.starch}g</div>
-                  {displayMode === 'full' && <div>水分: {material.parameters.moisture}%</div>}
-                </>
-              )}
+              <div>でんぷん: {material.parameters.starch}g</div>
+              {displayMode === 'full' && <div>水分: {material.parameters.moisture}%</div>}
             </div>
           </div>
         </motion.div>
