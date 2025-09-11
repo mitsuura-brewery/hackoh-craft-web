@@ -22,7 +22,7 @@ export default function KojiGrid({
   displayMode,
 }: KojiGridProps) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="grid grid-cols-2 gap-3">
       {kojiMaterials.map((material, index) => (
         <MaterialIconButton
           key={material.id}
