@@ -5,6 +5,8 @@ import {
   MaterialCalculationResult,
   SEASONAL_TEMPERATURES,
   getCurrentSeason,
+  KOJI_ENZYME_DATA,
+  calculateProteaseActivity,
 } from '@/types/material';
 
 // 地域別・月別平均気温データ（概算値）
@@ -172,6 +174,15 @@ export interface MaterialSpecs {
   totalWeight: number; // 重量(g)
   materialPeriod: number; // 期間目安(日)
   moistureRatio: number; // 水分(%) - 内部計算用
+  // 新しい計算項目
+  totalProtein: number; // たんぱく質(g)
+  totalFat: number; // 脂質(g)
+  totalStarch: number; // でんぷん(g)
+  saltConcentration: number; // 対水食塩濃度(%)
+  initialPH: number; // 初期pH
+  averageAlphaAmylase: number; // 素材の混合比率で計算されたαアミラーゼ
+  averageGlucoAmylase: number; // 素材の混合比率で計算されたグルコアミラーゼ
+  averageProtease: number; // プロテアーゼ活性値
 }
 
 export function calculateMaterialSpecs(
@@ -187,6 +198,14 @@ export function calculateMaterialSpecs(
       totalWeight: 0,
       materialPeriod: 0,
       moistureRatio: 0,
+      totalProtein: 0,
+      totalFat: 0,
+      totalStarch: 0,
+      saltConcentration: 0,
+      initialPH: 0,
+      averageAlphaAmylase: 0,
+      averageGlucoAmylase: 0,
+      averageProtease: 0,
     };
   }
   if (selectedMaterials.length === 0) {
@@ -197,6 +216,14 @@ export function calculateMaterialSpecs(
       totalWeight: 0,
       materialPeriod: 0,
       moistureRatio: 0,
+      totalProtein: 0,
+      totalFat: 0,
+      totalStarch: 0,
+      saltConcentration: 0,
+      initialPH: 0,
+      averageAlphaAmylase: 0,
+      averageGlucoAmylase: 0,
+      averageProtease: 0,
     };
   }
 
@@ -262,6 +289,55 @@ export function calculateMaterialSpecs(
   // }
   // const materialPeriod = Math.round(baseMaterialPeriod);
 
+  // 新しい計算項目の追加
+
+  // 1. たんぱく質、脂質、でんぷんを個別に計算
+  const totalProtein = selectedMaterials.reduce((sum, m) => sum + m.parameters.protein, 0);
+  const totalFat = selectedMaterials.reduce((sum, m) => sum + m.parameters.fat, 0);
+  const totalStarch = selectedMaterials.reduce((sum, m) => sum + m.parameters.starch, 0);
+
+  // 2. 対水食塩濃度（塩分量 / 水分量 * 100）
+  const saltConcentration = finalTotalMoistureAmount > 0 
+    ? (totalSaltAmount / finalTotalMoistureAmount) * 100 
+    : 0;
+
+  // 3. 初期pH（素材の混合比率で計算、重量比）
+  const initialPH = finalTotalWeight > 0 
+    ? selectedMaterials.reduce((sum, m) => sum + m.parameters.pH * m.parameters.weight, 0) / totalWeight
+    : 0;
+
+  // 4. αアミラーゼとグルコアミラーゼの平均値（麹材料のみ、重量比）
+  const kojiTotalWeight = kojiMaterials.reduce((sum, m) => sum + m.parameters.weight, 0);
+  let averageAlphaAmylase = 0;
+  let averageGlucoAmylase = 0;
+
+  if (kojiTotalWeight > 0) {
+    averageAlphaAmylase = kojiMaterials.reduce((sum, m) => {
+      const enzymeData = m.name.includes('米麹') ? KOJI_ENZYME_DATA.rice :
+                        m.name.includes('麦麹') ? KOJI_ENZYME_DATA.barley :
+                        { alphaAmylase: 0, glucoAmylase: 0 };
+      return sum + enzymeData.alphaAmylase * m.parameters.weight;
+    }, 0) / kojiTotalWeight;
+
+    averageGlucoAmylase = kojiMaterials.reduce((sum, m) => {
+      const enzymeData = m.name.includes('米麹') ? KOJI_ENZYME_DATA.rice :
+                        m.name.includes('麦麹') ? KOJI_ENZYME_DATA.barley :
+                        { alphaAmylase: 0, glucoAmylase: 0 };
+      return sum + enzymeData.glucoAmylase * m.parameters.weight;
+    }, 0) / kojiTotalWeight;
+  }
+
+  // 5. プロテアーゼ活性値（重量比平均）
+  let averageProtease = 0;
+  if (kojiTotalWeight > 0) {
+    averageProtease = kojiMaterials.reduce((sum, m) => {
+      const kojiType = m.name.includes('米麹') ? 'rice' :
+                      m.name.includes('麦麹') ? 'barley' : 'rice';
+      const proteaseValue = calculateProteaseActivity(kojiType, initialPH);
+      return sum + proteaseValue * m.parameters.weight;
+    }, 0) / kojiTotalWeight;
+  }
+
   return {
     kojiRatio,
     waterAmount,
@@ -269,6 +345,14 @@ export function calculateMaterialSpecs(
     totalWeight: finalTotalWeight, // 加水量を含む総重量
     materialPeriod,
     moistureRatio: Math.round(finalMoistureRatio * 10) / 10, // 加水量を含む水分率
+    totalProtein: Math.round(totalProtein * 10) / 10,
+    totalFat: Math.round(totalFat * 10) / 10,
+    totalStarch: Math.round(totalStarch * 10) / 10,
+    saltConcentration: Math.round(saltConcentration * 10) / 10,
+    initialPH: Math.round(initialPH * 100) / 100,
+    averageAlphaAmylase: Math.round(averageAlphaAmylase * 10) / 10,
+    averageGlucoAmylase: Math.round(averageGlucoAmylase * 10) / 10,
+    averageProtease: Math.round(averageProtease * 10) / 10,
   };
 }
 

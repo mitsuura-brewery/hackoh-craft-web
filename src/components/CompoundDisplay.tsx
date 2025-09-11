@@ -155,7 +155,7 @@ export default function CompoundDisplay({
   return (
     <animated.div
       style={containerSpring}
-      className="relative min-h-[320px] sm:min-h-[400px] flex flex-col items-center justify-center w-4/5 md:w-9/10 mx-auto"
+      className="relative min-h-[320px] sm:min-h-[400px] flex flex-col items-center justify-center w-[95%] sm:w-4/5 mx-auto"
     >
       <div className="relative flex-1 flex items-center justify-center w-full">
         {/* オーガニック境界線のキャンバス */}

@@ -6,6 +6,13 @@ import { calculateMaterialSpecs } from '@/utils/material';
 import { getSimilarMisoInfo } from '@/utils/miso';
 import AnimatedNumber from '@/components/AnimatedNumber';
 import SlideInText from '@/components/SlideInText';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { cn } from '@/lib/utils';
 
 interface DeliverablesProps {
   selectedMaterials: Material[];
@@ -83,7 +90,7 @@ export default function Deliverables({
   const completionInfo = getCompletionInfo();
 
   return (
-    <div className="w-full flex items-center flex-col-reverse sm:flex-row sm:gap-8 gap-4 mx-auto bg-white md:rounded-lg shadow-md py-8 px-4 sm:p-8 w-max-[320px]">
+    <div className="w-full flex items-center sm:items-start flex-col-reverse sm:flex-row sm:gap-8 gap-4 mx-auto bg-white md:rounded-lg shadow-md py-8 px-4 sm:p-8 w-max-[320px]">
       <div className="relative w-[180px] h-[180px] rounded-lg overflow-hidden shadow-lg flex-shrink-0">
         <Image
           src={hasMaterials && misoInfo ? misoInfo.image : './img/kyushu-awase.jpg'}
@@ -192,14 +199,38 @@ export default function Deliverables({
         </div>
 
         {/* 仕様一覧 */}
-        <div className="mb-6">
-          <div className="flex flex-wrap w-full gap-4 sm:gap-8 justify-between">
+        <div className="w-full">
+          <div className="grid grid-cols-3 md:grid-cols-5 w-full gap-2 justify-between mb-4">
             {renderSpec(hasMaterials, '麹歩合', specs.kojiRatio, '', 0.1)}
             {renderSpec(hasMaterials, '加水量', specs.waterAmount, 'ml', 0.2)}
             {renderSpec(hasMaterials, '塩分', specs.saltRatio, '%', 0.3)}
             {renderSpec(hasMaterials, '重量', specs.totalWeight, 'g', 0.4)}
             {renderSpec(hasMaterials, '期間目安', specs.materialPeriod, '日', 0.5)}
           </div>
+
+          {/* 詳細情報（アコーディオン形式） */}
+          {hasMaterials && (
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="details">
+                <AccordionTrigger className="text-sm text-ferment-secondary justify-center">
+                  詳細な成分・酵素情報
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="grid grid-cols-3 md:grid-cols-5 gap-2 pt-2">
+                    {renderSpec(true, 'たんぱく質', specs.totalProtein, 'g', 0)}
+                    {renderSpec(true, '脂質', specs.totalFat, 'g', 0)}
+                    {renderSpec(true, 'でんぷん', specs.totalStarch, 'g', 0)}
+                    {renderSpec(true, '水分', specs.moistureRatio, '%', 0)}
+                    {renderSpec(true, '対水食塩濃度', specs.saltConcentration, '%', 0)}
+                    {renderSpec(true, '初期pH', specs.initialPH, '', 0)}
+                    {renderSpec(true, 'αアミラーゼ', specs.averageAlphaAmylase, '', 0)}
+                    {renderSpec(true, 'グルコアミラーゼ', specs.averageGlucoAmylase, '', 0)}
+                    {renderSpec(true, 'プロテアーゼ', specs.averageProtease, '', 0)}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
         </div>
       </div>
     </div>
@@ -207,6 +238,9 @@ export default function Deliverables({
 }
 
 const renderSpec = (enable: boolean, label: string, value: number, unit: string, delay: number) => {
+  // 塩分の場合は小数点下1桁まで表示
+  const displayValue = label === '塩分' ? Math.round(value * 10) / 10 : value;
+
   return (
     <motion.div
       className="text-center"
@@ -214,11 +248,15 @@ const renderSpec = (enable: boolean, label: string, value: number, unit: string,
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
     >
-      <p className="text-sm text-ferment-secondary mb-1">{label}</p>
+      <p
+        className={cn('text-ferment-secondary mb-1', label.length < 7 ? 'text-sm' : 'text-[11px]')}
+      >
+        {label}
+      </p>
       <p className="text-xl font-bold text-ferment-dark">
         {enable ? (
           <>
-            <AnimatedNumber value={value} />
+            <AnimatedNumber value={displayValue} />
             <span className="text-sm text-ferment-secondary">{unit}</span>
           </>
         ) : (
