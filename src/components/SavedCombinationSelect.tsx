@@ -57,24 +57,26 @@ export default function SavedCombinationSelect({
   };
 
 
-  if (combinations.length === 0) {
-    return null;
-  }
-
   return (
     <Select
       value={selectedValue}
       onValueChange={handleSelect}
     >
-      <SelectTrigger className={`w-[140px] h-8 text-xs ${selectedValue ? 'text-red-600' : ''}`}>
-        <SelectValue placeholder="保存したもの" />
+      <SelectTrigger className={`w-[140px] h-8 text-xs bg-white ${selectedValue ? 'text-red-600' : ''}`}>
+        <SelectValue placeholder={combinations.length === 0 ? "保存なし" : "保存したもの"} />
       </SelectTrigger>
       <SelectContent>
-        {combinations.map((combination) => (
-          <SelectItem key={combination.id} value={combination.id}>
-            {combination.label}
+        {combinations.length === 0 ? (
+          <SelectItem value="empty" disabled>
+            保存された組み合わせがありません
           </SelectItem>
-        ))}
+        ) : (
+          combinations.map((combination) => (
+            <SelectItem key={combination.id} value={combination.id}>
+              {combination.label}
+            </SelectItem>
+          ))
+        )}
       </SelectContent>
     </Select>
   );

@@ -77,7 +77,7 @@ export default function IntegratedMaterialIcons({
               title="麹を選択"
             >
               <Image
-                src="/img/aspergillus.png"
+                src="./img/aspergillus.png"
                 alt="麹菌"
                 width={32}
                 height={32}

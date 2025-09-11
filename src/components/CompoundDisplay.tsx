@@ -293,7 +293,7 @@ export default function CompoundDisplay({
               }}
             >
               <SelectTrigger
-                className={`w-[140px] h-8 text-xs ${isKagaMisoSelected ? 'text-red-600' : ''}`}
+                className={`w-[140px] h-8 text-xs bg-white ${isKagaMisoSelected ? 'text-red-600' : ''}`}
               >
                 <SelectValue placeholder="ご当地味噌" />
               </SelectTrigger>
@@ -313,41 +313,55 @@ export default function CompoundDisplay({
       )}
 
       {/* 保存・削除・リセットボタン */}
-      {selectedMaterials.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          className="absolute bottom-0 left-1/2 -translate-x-1/2"
-        >
-          <div className="flex gap-2">
-            {matchingCombination ? (
-              <Button
-                onClick={() => setIsDeleteDialogOpen(true)}
-                variant="outline"
-                size="sm"
-                className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
-              >
-                削除する
-              </Button>
-            ) : (
-              <Button
-                onClick={() => setIsSaveDialogOpen(true)}
-                variant="outline"
-                size="sm"
-                className="h-8 text-xs"
-              >
-                保存する
-              </Button>
-            )}
-            {onReset && (
-              <Button onClick={onReset} variant="outline" size="sm" className="h-8 text-xs">
-                リセット
-              </Button>
-            )}
-          </div>
-        </motion.div>
-      )}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        className="absolute bottom-0 left-1/2 -translate-x-1/2"
+      >
+        <div className="flex gap-2">
+          {matchingCombination ? (
+            <Button
+              onClick={() => setIsDeleteDialogOpen(true)}
+              variant="outline"
+              size="sm"
+              className="h-8 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 bg-white"
+              disabled={selectedMaterials.length === 0}
+            >
+              削除する
+            </Button>
+          ) : (
+            <Button
+              onClick={() => setIsSaveDialogOpen(true)}
+              variant="outline"
+              size="sm"
+              className={`h-8 text-xs ${
+                selectedMaterials.length > 0 
+                  ? 'bg-white hover:bg-gray-50' 
+                  : 'bg-background border-gray-300 text-gray-400 cursor-not-allowed'
+              }`}
+              disabled={selectedMaterials.length === 0}
+            >
+              保存する
+            </Button>
+          )}
+          {onReset && (
+            <Button 
+              onClick={onReset} 
+              variant="outline" 
+              size="sm" 
+              className={`h-8 text-xs ${
+                selectedMaterials.length > 0 
+                  ? 'bg-white hover:bg-gray-50' 
+                  : 'bg-background border-gray-300 text-gray-400 cursor-not-allowed'
+              }`}
+              disabled={selectedMaterials.length === 0}
+            >
+              リセット
+            </Button>
+          )}
+        </div>
+      </motion.div>
 
       {/* 保存ダイアログ */}
       <SaveCombinationDialog
