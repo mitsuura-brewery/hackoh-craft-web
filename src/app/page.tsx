@@ -91,6 +91,8 @@ export default function MaterialLab() {
           <PurchaseButton
             selectedMaterials={selectedMaterials}
             disabled={selectedMaterials.length === 0}
+            selectedMonth={selectedMonth}
+            selectedRegion={selectedRegion}
           />
         </div>
       </div>

@@ -155,7 +155,7 @@ export default function CompoundDisplay({
   return (
     <animated.div
       style={containerSpring}
-      className="relative min-h-[320px] sm:min-h-[400px] flex flex-col items-center justify-center w-[95%] sm:w-4/5 mx-auto"
+      className="relative min-h-[360px] sm:min-h-[400px] flex flex-col items-center justify-center w-[95%] sm:w-4/5 mx-auto"
     >
       <div className="relative flex-1 flex items-center justify-center w-full">
         {/* オーガニック境界線のキャンバス */}
@@ -293,7 +293,9 @@ export default function CompoundDisplay({
               }}
             >
               <SelectTrigger
-                className={`w-[140px] h-8 text-xs bg-white ${isKagaMisoSelected ? 'text-red-600' : ''}`}
+                className={`w-[140px] h-8 text-xs bg-white ${
+                  isKagaMisoSelected ? 'text-red-600' : ''
+                }`}
               >
                 <SelectValue placeholder="ご当地味噌" />
               </SelectTrigger>
@@ -311,6 +313,18 @@ export default function CompoundDisplay({
           </div>
         </motion.div>
       )}
+
+      {/* 組み合わせ番号 */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        className="absolute bottom-[40px] left-1/2 -translate-x-1/2"
+      >
+        <div className="text-sm text-ferment-secondary">
+          組み合わせ番号: <span className="font-semibold text-ferment-primary">123-456</span>
+        </div>
+      </motion.div>
 
       {/* 保存・削除・リセットボタン */}
       <motion.div
@@ -336,8 +350,8 @@ export default function CompoundDisplay({
               variant="outline"
               size="sm"
               className={`h-8 text-xs ${
-                selectedMaterials.length > 0 
-                  ? 'bg-white hover:bg-gray-50' 
+                selectedMaterials.length > 0
+                  ? 'bg-white hover:bg-gray-50'
                   : 'bg-background border-gray-300 text-gray-400 cursor-not-allowed'
               }`}
               disabled={selectedMaterials.length === 0}
@@ -346,13 +360,13 @@ export default function CompoundDisplay({
             </Button>
           )}
           {onReset && (
-            <Button 
-              onClick={onReset} 
-              variant="outline" 
-              size="sm" 
+            <Button
+              onClick={onReset}
+              variant="outline"
+              size="sm"
               className={`h-8 text-xs ${
-                selectedMaterials.length > 0 
-                  ? 'bg-white hover:bg-gray-50' 
+                selectedMaterials.length > 0
+                  ? 'bg-white hover:bg-gray-50'
                   : 'bg-background border-gray-300 text-gray-400 cursor-not-allowed'
               }`}
               disabled={selectedMaterials.length === 0}

@@ -6,17 +6,22 @@ import { motion } from 'motion/react';
 import { useSpring, animated } from '@react-spring/web';
 import { ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
+import DownloadPDFButton from './DownloadPDFButton';
 
 interface PurchaseButtonProps {
   selectedMaterials: Material[];
   disabled?: boolean;
   shopifyBaseUrl?: string;
+  selectedMonth: number;
+  selectedRegion: string;
 }
 
 export default function PurchaseButton({
   selectedMaterials,
   disabled = false,
   shopifyBaseUrl = 'https://hackoh.jp',
+  selectedMonth,
+  selectedRegion,
 }: PurchaseButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -44,7 +49,8 @@ export default function PurchaseButton({
     setTimeout(() => setIsClicked(false), 150);
 
     // Shopify URLを生成して遷移
-    const shopifyUrl = generateShopifyUrl(selectedMaterials, shopifyBaseUrl);
+    const shopifyUrl = generateShopifyUrl(selectedMaterials, shopifyBaseUrl, '123-456');
+    console.log(shopifyUrl);
 
     // 新しいタブで開く
     window.open(shopifyUrl, '_blank', 'noopener,noreferrer');
@@ -61,7 +67,7 @@ export default function PurchaseButton({
     .join('、');
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 px-4">
       {/* 選択した材料の確認 */}
       {selectedMaterials.length > 0 && (
         <motion.div
@@ -74,6 +80,14 @@ export default function PurchaseButton({
         </motion.div>
       )}
 
+      {/* PDFダウンロードボタン */}
+      <DownloadPDFButton
+        selectedMaterials={selectedMaterials}
+        selectedMonth={selectedMonth}
+        selectedRegion={selectedRegion}
+        disabled={disabled}
+      />
+
       {/* 購入ボタン */}
       <animated.button
         style={buttonSpring}
@@ -85,9 +99,7 @@ export default function PurchaseButton({
       >
         <div className="flex items-center justify-center gap-3 relative z-10">
           <ShoppingCart size={24} />
-          <span>
-            {selectedMaterials.length === 0 ? '材料を選んでください' : '選んだ材料を購入する'}
-          </span>
+          <span>この組み合わせを購入する</span>
         </div>
 
         {/* ホバー時のエフェクト */}

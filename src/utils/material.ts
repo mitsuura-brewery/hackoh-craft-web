@@ -437,6 +437,7 @@ export const calculateMaterial = (materials: Material[]): MaterialCalculationRes
 export const generateShopifyUrl = (
   materials: Material[],
   baseUrl: string = 'https://your-shop.myshopify.com',
+  combiNumber: string = '',
 ): string => {
   // 材料ごとの数をカウント
   const materialCounts = materials.reduce((acc, material) => {
@@ -449,7 +450,17 @@ export const generateShopifyUrl = (
     .map(([variantId, count]) => `${variantId}:${count}`)
     .join(',');
 
-  return `${baseUrl}/cart/${cartItems}?storefront=true`;
+  // 基本URL
+  let url = `${baseUrl}/cart/${cartItems}?storefront=true`;
+
+  // 組み合わせ番号がある場合はクエリパラメータに追加
+  if (combiNumber) {
+    const noteParam = encodeURIComponent(`組み合わせ番号: ${combiNumber}`);
+    const combiParam = encodeURIComponent(combiNumber);
+    url += `&note=${noteParam}&attributes[combi-number]=${combiParam}`;
+  }
+
+  return url;
 };
 
 export const createCompound = (materials: Material[]): Compound => {
