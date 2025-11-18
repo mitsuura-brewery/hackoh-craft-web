@@ -3,7 +3,7 @@
 import { Material } from '@/types/material';
 import { generateShopifyUrl } from '@/utils/material';
 import { motion } from 'motion/react';
-import { useSpring, animated } from '@react-spring/web';
+import { useSpring, animated } from 'react-spring';
 import { ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 import DownloadPDFButton from './DownloadPDFButton';

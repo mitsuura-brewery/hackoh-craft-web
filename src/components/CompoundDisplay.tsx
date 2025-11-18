@@ -3,7 +3,7 @@
 import { Material } from '@/types/material';
 import { motion } from 'motion/react';
 import { AnimatePresence } from 'motion/react';
-import { useSpring, animated, useTransition } from '@react-spring/web';
+import { useSpring, animated, useTransition } from 'react-spring';
 import { useEffect, useRef, useState } from 'react';
 import rough from 'roughjs';
 import IntegratedMaterialIcons from './IntegratedMaterialIcons';

@@ -1,7 +1,7 @@
 'use client';
 
 import { Material } from '@/types/material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';

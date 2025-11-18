@@ -184,9 +184,7 @@ export const MaterialRecipePDF = ({
         {/* ヘッダー */}
         <View style={styles.header}>
           <Text style={styles.title}>味噌材料レシピ</Text>
-          <Text style={styles.subtitle}>
-            作成日: {new Date().toLocaleDateString('ja-JP')}
-          </Text>
+          <Text style={styles.subtitle}>作成日: {new Date().toLocaleDateString('ja-JP')}</Text>
         </View>
 
         {/* シミュレーションリンク */}
@@ -198,6 +196,7 @@ export const MaterialRecipePDF = ({
               </Text>
               <Text style={styles.linkUrl}>{simulationUrl}</Text>
             </View>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image src={simulationQRCode} style={styles.qrCode} />
           </View>
         )}
@@ -212,6 +211,7 @@ export const MaterialRecipePDF = ({
               <Text style={styles.linkText}>※新規注文となるためご注意ください</Text>
               <Text style={styles.linkUrl}>{shopifyUrl}</Text>
             </View>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image src={purchaseQRCode} style={styles.qrCode} />
           </View>
         )}
@@ -235,9 +235,7 @@ export const MaterialRecipePDF = ({
           <Text style={styles.sectionTitle}>仕込み条件</Text>
           <Text style={styles.conditionText}>地域: {region}</Text>
           <Text style={styles.conditionText}>仕込み月: {month}月</Text>
-          {misoInfo && (
-            <Text style={styles.conditionText}>類似する味噌: {misoInfo.name}</Text>
-          )}
+          {misoInfo && <Text style={styles.conditionText}>類似する味噌: {misoInfo.name}</Text>}
           <Text style={styles.conditionText}>
             完成予定: {completionStr} ({specs.materialPeriod}日後)
           </Text>
@@ -266,11 +264,7 @@ export const MaterialRecipePDF = ({
             {renderSpecItem('対水食塩濃度', specs.saltConcentration.toFixed(1), '%')}
             {renderSpecItem('初期pH', specs.initialPH.toFixed(2), '')}
             {renderSpecItem('αアミラーゼ', specs.averageAlphaAmylase.toFixed(1), '')}
-            {renderSpecItem(
-              'グルコアミラーゼ',
-              specs.averageGlucoAmylase.toFixed(1),
-              ''
-            )}
+            {renderSpecItem('グルコアミラーゼ', specs.averageGlucoAmylase.toFixed(1), '')}
             {renderSpecItem('プロテアーゼ', specs.averageProtease.toFixed(1), '')}
           </View>
         </View>
@@ -278,12 +272,8 @@ export const MaterialRecipePDF = ({
         {/* 注意事項 */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>ご注意</Text>
-          <Text style={styles.noteText}>
-            • 発酵期間は季節や環境により変動する場合があります
-          </Text>
-          <Text style={styles.noteText}>
-            • 初回製造時は説明書をよくお読みください
-          </Text>
+          <Text style={styles.noteText}>• 発酵期間は季節や環境により変動する場合があります</Text>
+          <Text style={styles.noteText}>• 初回製造時は説明書をよくお読みください</Text>
           <Text style={styles.noteText}>• 保存方法により品質が左右されます</Text>
         </View>
 

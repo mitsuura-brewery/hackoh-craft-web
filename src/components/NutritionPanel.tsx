@@ -1,8 +1,8 @@
 'use client';
 
 import { NutritionFacts } from '@/types/material';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useSpring, animated } from '@react-spring/web';
+import { motion, AnimatePresence } from 'motion/react';
+import { useSpring, animated } from 'react-spring';
 import { Clock, Lightbulb } from 'lucide-react';
 
 interface NutritionPanelProps {

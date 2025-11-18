@@ -2,7 +2,7 @@
 
 import { Material } from '@/types/material';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
