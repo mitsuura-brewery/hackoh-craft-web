@@ -75,3 +75,13 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # Notify job
+  notify:
+    needs: deploy
+    if: always()
+    uses: thwoo-inc/.github/.github/workflows/slack-notify.yml@main
+    with:
+      job_name: 'deploy'
+      job_status: ${{ needs.deploy.result }}
+    secrets: inherit
